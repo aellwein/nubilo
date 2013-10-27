@@ -17,6 +17,7 @@ package de.steinpfeffer.nubilo.core.persistence;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -25,6 +26,7 @@ import java.sql.Statement;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -54,6 +56,7 @@ public final class H2DbApiLearningTest {
         assertThat(connection.isValid(0)).isTrue();
     }
 
+    @Ignore("This test is superseded by createTables")
     @Test
     public void createEmployeesTable() throws SQLException {
         final String tableName = "EMPLOYEES";
@@ -64,19 +67,43 @@ public final class H2DbApiLearningTest {
     private void createTable(final String tableName) throws SQLException {
         final StringBuilder createSqlString = new StringBuilder();
         createSqlString.append("CREATE TABLE ").append(tableName).append(" (");
-        createSqlString.append(tableName).append("_ID INTEGER").append(")");
+        createSqlString.append(tableName).append("_ID VARCHAR(64) PRIMARY KEY").append(")");
         final Statement createStatement = connection.createStatement();
         createStatement.executeUpdate(createSqlString.toString());
         createStatement.close();
     }
 
     private String getNameOfFirstTable() throws SQLException {
+        return getNameOf(0);
+    }
+
+    private String getNameOf(final int tableNumber) throws SQLException {
         final Statement showStatement = connection.createStatement();
         showStatement.execute("SHOW TABLES");
         final ResultSet resultSet = showStatement.getResultSet();
-        resultSet.next();
+        int i = tableNumber;
+        while (i >= 0) {
+            resultSet.next();
+            i--;
+        }
         final String result = resultSet.getString(1);
         showStatement.close();
         return result;
     }
+
+    @Test
+    public void createTables() throws SQLException {
+        final DatabaseUtil util = DatabaseUtil.getInstance();
+        final Statement statement = connection.createStatement();
+        final ClassLoader classLoader = getClass().getClassLoader();
+        final URL resource = classLoader.getResource("sql/setup.sql");
+        util.executeSqlScript(resource.getFile(), statement);
+        assertThat(getNameOfFirstTable()).isEqualTo("DIGESTS");
+        assertThat(getNameOfSecondTable()).isEqualTo("USERS");
+    }
+
+    private String getNameOfSecondTable() throws SQLException {
+        return getNameOf(1);
+    }
+
 }

@@ -26,5 +26,4 @@
         <module>nubilo-core-users-api</module>
         <module>nubilo-core-persistence</module>
     </modules>
-    <url>https://bitbucket.org/jufickel/nubilo</url>
 </project>
