@@ -9,7 +9,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Nubilo Parent</name>
+    <name>NUBILO :: Parent</name>
     <inceptionYear>2013</inceptionYear>
     <url>https://bitbucket.org/jufickel/nubilo</url>
 
