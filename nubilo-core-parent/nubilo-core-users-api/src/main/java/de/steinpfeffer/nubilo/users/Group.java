@@ -23,10 +23,12 @@ package de.steinpfeffer.nubilo.users;
  */
 public interface Group {
 
-    String getId();
-
     String getName();
 
     String getDisplayName();
+
+    int hashCode();
+
+    boolean equals(Object other);
 
 }
