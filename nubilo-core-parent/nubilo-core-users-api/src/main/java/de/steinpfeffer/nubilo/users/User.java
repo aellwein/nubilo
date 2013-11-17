@@ -23,8 +23,6 @@ package de.steinpfeffer.nubilo.users;
  */
 public interface User {
 
-    String getId();
-
     String getName();
 
     String getDisplayName();
