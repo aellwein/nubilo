@@ -2,7 +2,6 @@ package de.steinpfeffer.nubilo.users;
 
 import static de.steinpfeffer.utilities.validation.Validator.argumentNotEmpty;
 import static de.steinpfeffer.utilities.validation.Validator.argumentNotNull;
-import static de.steinpfeffer.utilities.validation.Validator.isNotNull;
 import static de.steinpfeffer.utilities.validation.Validator.isNull;
 
 import javax.annotation.concurrent.Immutable;
@@ -40,8 +39,8 @@ public final class DefaultGroup implements Group {
         argumentNotEmpty(name, msgTemplate, "empty");
     }
 
-    private static boolean isGivenDisplayNameSuitable(final String providedDisplayName) {
-        return null != providedDisplayName && !providedDisplayName.isEmpty();
+    private static boolean isGivenDisplayNameSuitable(final String givenDisplayName) {
+        return null != givenDisplayName && !givenDisplayName.isEmpty();
     }
 
     /**
@@ -60,7 +59,7 @@ public final class DefaultGroup implements Group {
 
     /**
      * Delivers an instance of {@link DefaultGroup} based on the
-     * provided parameters.
+     * provided arguments.
      * 
      * @param name
      *            the technical name of the group, must neither be
@@ -107,11 +106,7 @@ public final class DefaultGroup implements Group {
         if (!name.equals(other.name)) {
             return false;
         }
-        if (isNull(displayName)) {
-            if (isNotNull(other.displayName)) {
-                return false;
-            }
-        } else if (!displayName.equals(other.displayName)) {
+        if (!displayName.equals(other.displayName)) {
             return false;
         }
         return true;
