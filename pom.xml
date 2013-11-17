@@ -216,6 +216,5 @@
 
     <modules>
         <module>nubilo-core-parent</module>
-        <module>nubilo-core-users</module>
     </modules>
 </project>

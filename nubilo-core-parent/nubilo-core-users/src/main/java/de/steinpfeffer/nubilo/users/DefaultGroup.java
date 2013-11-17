@@ -2,7 +2,6 @@ package de.steinpfeffer.nubilo.users;
 
 import static de.steinpfeffer.utilities.validation.Validator.argumentNotEmpty;
 import static de.steinpfeffer.utilities.validation.Validator.argumentNotNull;
-import static de.steinpfeffer.utilities.validation.Validator.isNull;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -96,7 +95,7 @@ public final class DefaultGroup implements Group {
         if (this == obj) {
             return true;
         }
-        if (isNull(obj)) {
+        if (null == obj) {
             return false;
         }
         if (!(obj instanceof DefaultGroup)) {
