@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>de.steinpfeffer.nubilo</groupId>
+    <artifactId>nubilo-core-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>nubilo-core-users</artifactId>
+  <dependencies>
+      <dependency>
+          <groupId>de.steinpfeffer.nubilo</groupId>
+          <artifactId>nubilo-core-users-api</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>de.steinpfeffer.utilities</groupId>
+          <artifactId>utilities-api</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>de.steinpfeffer.utilities</groupId>
+          <artifactId>utilities-hashcode</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>de.steinpfeffer.utilities</groupId>
+          <artifactId>utilities-string</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>de.steinpfeffer.utilities</groupId>
+          <artifactId>utilities-validation</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.mutabilitydetector</groupId>
+          <artifactId>MutabilityDetector</artifactId>
+      </dependency>
+  </dependencies>
+</project>

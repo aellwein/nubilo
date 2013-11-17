@@ -39,10 +39,25 @@
         <slf4j.version>1.7.2</slf4j.version>
         <felix.version>4.2.1</felix.version>
         <pax-exam.version>3.3.0</pax-exam.version>
+        <utilities.version>1.1.0-SNAPSHOT</utilities.version>
+        <mutabilitydetector.version>0.9</mutabilitydetector.version>
         <package.prefix>de.steinpfeffer.nubilo</package.prefix>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>arda</id>
+            <url>http://retujo.de/mavenrepo/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <pluginManagement>
@@ -148,6 +163,37 @@
                 <artifactId>pax-exam-junit4</artifactId>
                 <version>${pax-exam.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>de.steinpfeffer.utilities</groupId>
+                <artifactId>utilities-api</artifactId>
+                <version>${utilities.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.steinpfeffer.utilities</groupId>
+                <artifactId>utilities-hashcode</artifactId>
+                <version>${utilities.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.steinpfeffer.utilities</groupId>
+                <artifactId>utilities-string</artifactId>
+                <version>${utilities.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.steinpfeffer.utilities</groupId>
+                <artifactId>utilities-validation</artifactId>
+                <version>${utilities.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mutabilitydetector</groupId>
+                <artifactId>MutabilityDetector</artifactId>
+                <version>${mutabilitydetector.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -170,5 +216,6 @@
 
     <modules>
         <module>nubilo-core-parent</module>
+        <module>nubilo-core-users</module>
     </modules>
 </project>

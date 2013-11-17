@@ -25,5 +25,6 @@
         <module>nubilo-core-persistence-api</module>
         <module>nubilo-core-users-api</module>
         <module>nubilo-core-persistence</module>
+        <module>nubilo-core-users</module>
     </modules>
 </project>

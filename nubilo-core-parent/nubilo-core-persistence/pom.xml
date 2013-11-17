@@ -22,16 +22,6 @@
             <name>Internal release repository</name>
             <url>http://oberasoftware.com:8080/nexus/content/repositories/ren_release/</url>
         </repository>
-        <repository>
-            <id>arda</id>
-            <url>http://retujo.de/mavenrepo/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
     </repositories>
 
     <build>
