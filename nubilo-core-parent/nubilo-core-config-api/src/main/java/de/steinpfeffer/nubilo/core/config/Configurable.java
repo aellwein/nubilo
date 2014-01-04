@@ -21,6 +21,6 @@ public interface Configurable {
      *            the configuration properties which are provided by
      *            the central configuration facility.
      */
-    void configure(Dictionary<String, Object> configurationProperties);
+    void configure(Dictionary<String, ?> configurationProperties);
 
 }
