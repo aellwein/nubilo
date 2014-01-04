@@ -1,6 +1,6 @@
 package de.steinpfeffer.nubilo.core.config;
 
-import java.util.Map;
+import java.util.Dictionary;
 
 /**
  * Implementors are supposed to register themselves on the Service
@@ -21,6 +21,6 @@ public interface Configurable {
      *            the configuration properties which are provided by
      *            the central configuration facility.
      */
-    void configure(Map<String, Object> configurationProperties);
+    void configure(Dictionary<String, Object> configurationProperties);
 
 }
