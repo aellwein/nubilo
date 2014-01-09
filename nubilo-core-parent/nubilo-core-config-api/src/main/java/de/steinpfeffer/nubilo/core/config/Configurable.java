@@ -3,9 +3,10 @@ package de.steinpfeffer.nubilo.core.config;
 import java.util.Dictionary;
 
 /**
- * Implementors are supposed to register themselves on the Service
- * Registry for receiving configuration properties of the central
- * configuration facility (Whiteboard pattern).
+ * This interfaces provides access to the configuration properties of
+ * Nubilo core. Implementors are supposed to register themselves on
+ * the Service Registry for receiving configuration properties of the
+ * central configuration facility (Whiteboard pattern).
  * 
  * @author Juergen Fickel
  * @since 1.0.0
