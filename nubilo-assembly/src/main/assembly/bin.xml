@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2
+                              http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+    <id>bin</id>
+
+    <formats>
+        <format>tar.gz</format>
+        <format>zip</format>
+    </formats>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>bin</outputDirectory>
+            <outputFileNameMapping>felix.${artifact.extension}</outputFileNameMapping>
+            <includes>
+                <include>org.apache.felix:org.apache.felix.main</include>
+            </includes>
+        </dependencySet>
+
+        <!-- Felix runtime bundles -->
+        <dependencySet>
+            <outputDirectory>bundle</outputDirectory>
+            <includes>
+                <include>*:org.apache.felix.bundlerepository</include>
+                <include>*:org.apache.felix.configadmin</include>
+                <include>*:org.apache.felix.fileinstall</include>
+                <include>*:org.apache.felix.gogo.command</include>
+                <include>*:org.apache.felix.gogo.runtime</include>
+                <include>*:org.apache.felix.gogo.shell</include>
+            </includes>
+        </dependencySet>
+
+        <!-- Nubilo bundles -->
+        <dependencySet>
+            <outputDirectory>bundle</outputDirectory>
+            <includes>
+                <include>de.steinpfeffer.nubilo:*</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <outputDirectory>conf</outputDirectory>
+            <includes>
+                <include>config.properties</include>
+                <include>nubilo.core.cfg</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <!-- This file set is meant to provide the empty folder "load" -->
+            <directory>src/main/resources</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>load</include>
+            </includes>
+            <excludes>
+                <exclude>placeholder.txt</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+
+</assembly>
