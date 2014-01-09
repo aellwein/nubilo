@@ -37,9 +37,11 @@
         <licence.email>steinpfeffer@gmx.de</licence.email>
         <java.version>1.7</java.version>
         <slf4j.version>1.7.2</slf4j.version>
+        <osgi.core.version>5.0.0</osgi.core.version>
+        <osgi.compendium.version>5.0.0</osgi.compendium.version>
         <felix.version>4.2.1</felix.version>
         <pax-exam.version>3.3.0</pax-exam.version>
-        <utilities.version>1.1.0-SNAPSHOT</utilities.version>
+        <utilities.version>1.0.0-SNAPSHOT</utilities.version>
         <mutabilitydetector.version>0.9</mutabilitydetector.version>
         <package.prefix>de.steinpfeffer.nubilo</package.prefix>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -153,6 +155,18 @@
             </dependency>
 
             <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+                <version>${osgi.core.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.compendium</artifactId>
+                <version>${osgi.compendium.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
                 <version>${felix.version}</version>
@@ -189,6 +203,13 @@
             </dependency>
 
             <dependency>
+                <groupId>de.steinpfeffer.utilities</groupId>
+                <artifactId>utilities-testing</artifactId>
+                <version>${utilities.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.mutabilitydetector</groupId>
                 <artifactId>MutabilityDetector</artifactId>
                 <version>${mutabilitydetector.version}</version>
@@ -216,5 +237,6 @@
 
     <modules>
         <module>nubilo-core-parent</module>
+        <module>nubilo-assembly</module>
     </modules>
 </project>

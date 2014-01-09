@@ -82,14 +82,6 @@
        y1="71.5"
        x2="97.25"
        y2="86" />
-    <filter
-       inkscape:collect="always"
-       id="filter5557">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.4552002"
-         id="feGaussianBlur5559" />
-    </filter>
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3796"
@@ -119,12 +111,12 @@
      inkscape:cx="43.117489"
      inkscape:cy="64.651443"
      inkscape:document-units="px"
-     inkscape:current-layer="g3022"
+     inkscape:current-layer="g3079"
      showgrid="false"
      inkscape:window-width="909"
      inkscape:window-height="929"
-     inkscape:window-x="2278"
-     inkscape:window-y="58"
+     inkscape:window-x="524"
+     inkscape:window-y="56"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
@@ -219,7 +211,7 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="Schriftzug"
-     style="display:none">
+     style="display:inline">
     <text
        xml:space="preserve"
        style="font-size:40.00011063px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#1e1e1e;fill-opacity:1;stroke:none;display:inline;font-family:Linux Biolinum Keyboard;-inkscape-font-specification:Linux Biolinum Keyboard Bold"
@@ -235,7 +227,7 @@
          style="font-size:22.00006104px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#1e1e1e;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">NUBILO</tspan></text>
   </g>
   <g
-     style="display:inline"
+     style="display:none"
      inkscape:label="Schriftzug_als_Pfad"
      id="g3019"
      inkscape:groupmode="layer">
@@ -273,6 +265,71 @@
          style="font-size:22.00006104px;font-weight:normal;fill:#1e1e1e;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
          id="path3036"
          inkscape:connector-curvature="0" />
+    </g>
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Internetlogo_Schrift"
+     id="g3031"
+     inkscape:groupmode="layer">
+    <text
+       transform="scale(1.0000028,0.9999972)"
+       sodipodi:linespacing="100%"
+       id="text3033"
+       y="120.07835"
+       x="63.537907"
+       style="font-size:40.00011063px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#1e1e1e;fill-opacity:1;stroke:none;display:inline;font-family:Linux Biolinum Keyboard;-inkscape-font-specification:Linux Biolinum Keyboard Bold"
+       xml:space="preserve"><tspan
+         style="font-size:22.00006104px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#1e1e1e;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+         y="120.07835"
+         x="63.537907"
+         id="tspan3035"
+         sodipodi:role="line">NUBILO</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:22px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#4a708b;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="73.853378"
+       y="87.477036"
+       id="text3075"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3077"
+         x="73.853378"
+         y="87.477036">(#)</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="g3079"
+     inkscape:label="Internetlogo_Pfad"
+     style="display:inline">
+    <text
+       xml:space="preserve"
+       style="font-size:40.00011063px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#1e1e1e;fill-opacity:1;stroke:none;display:inline;font-family:Linux Biolinum Keyboard;-inkscape-font-specification:Linux Biolinum Keyboard Bold"
+       x="63.537907"
+       y="120.07835"
+       id="text3081"
+       sodipodi:linespacing="100%"
+       transform="scale(1.0000028,0.9999972)"><tspan
+         sodipodi:role="line"
+         id="tspan3083"
+         x="63.537907"
+         y="120.07835"
+         style="font-size:22.00006104px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#1e1e1e;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">NUBILO</tspan></text>
+    <g
+       style="font-size:22px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#4a708b;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       id="text3085">
+      <path
+         d="m 62.86412,70.783676 c -0.959641,1.647151 -1.672205,3.276381 -2.137695,4.887695 -0.465499,1.611339 -0.698246,3.24415 -0.698242,4.898438 -4e-6,1.654302 0.232743,3.294274 0.698242,4.919922 0.472651,1.61849 1.185216,3.24772 2.137695,4.887695 l -1.71875,0 c -1.074222,-1.682944 -1.879886,-3.337239 -2.416992,-4.96289 -0.52995,-1.625648 -0.794923,-3.240555 -0.794922,-4.844727 -10e-7,-1.596997 0.264972,-3.204743 0.794922,-4.823242 0.529945,-1.618476 1.335608,-3.272772 2.416992,-4.962891 l 1.71875,0"
+         style=""
+         id="path3090" />
+      <path
+         d="m 75.883652,77.798325 -3.125977,0 -0.902344,3.58789 3.147461,0 0.88086,-3.58789 m -1.611328,-6.112305 -1.117188,4.458008 3.136719,0 1.12793,-4.458008 1.71875,0 -1.106446,4.458008 3.351563,0 0,1.654297 -3.770508,0 -0.880859,3.58789 3.416015,0 0,1.643555 -3.834961,0 -1.117187,4.447266 -1.71875,0 1.106445,-4.447266 -3.147461,0 -1.106445,4.447266 -1.729492,0 1.117187,-4.447266 -3.383789,0 0,-1.643555 3.78125,0 0.902344,-3.58789 -3.458985,0 0,-1.654297 3.87793,0 1.095703,-4.458008 1.740235,0"
+         style=""
+         id="path3092" />
+      <path
+         d="m 84.831894,70.783676 1.71875,0 c 1.074214,1.690119 1.876297,3.344415 2.40625,4.962891 0.537103,1.618499 0.805657,3.226245 0.805664,4.823242 -7e-6,1.604172 -0.268561,3.219079 -0.805664,4.844727 -0.529953,1.625651 -1.332036,3.279946 -2.40625,4.96289 l -1.71875,0 c 0.952471,-1.639975 1.661455,-3.269205 2.126953,-4.887695 0.472652,-1.625648 0.70898,-3.26562 0.708984,-4.919922 -4e-6,-1.654288 -0.236332,-3.287099 -0.708984,-4.898438 -0.465498,-1.611314 -1.174482,-3.240544 -2.126953,-4.887695"
+         style=""
+         id="path3094" />
     </g>
   </g>
 </svg>
