@@ -1,1 +1,1 @@
-Void.
+This file's only purpose is to guarantee that the "load" folder is contained in the assembly.

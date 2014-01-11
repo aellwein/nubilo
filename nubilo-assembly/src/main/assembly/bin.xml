@@ -53,10 +53,12 @@
             </includes>
         </fileSet>
         <fileSet>
-            <!-- This file set is meant to provide the empty folder "load" -->
+            <!-- Empty folders for the runtime. -->
             <directory>src/main/resources</directory>
-            <outputDirectory></outputDirectory>
+            <directoryMode>755</directoryMode>
+            <outputDirectory>/</outputDirectory>
             <includes>
+                <include>data</include>
                 <include>load</include>
             </includes>
             <excludes>

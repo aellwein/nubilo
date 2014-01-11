@@ -1,0 +1,1 @@
+This file's only purpose is to guarantee that the "data" folder is contained in the assembly.
