@@ -93,6 +93,11 @@
             <artifactId>nubilo-core-config</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+                <groupId>de.steinpfeffer.utilities</groupId>
+                <artifactId>utilities-validation</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

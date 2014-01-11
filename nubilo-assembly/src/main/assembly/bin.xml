@@ -38,6 +38,7 @@
             <outputDirectory>bundle</outputDirectory>
             <includes>
                 <include>de.steinpfeffer.nubilo:*</include>
+                <include>de.steinpfeffer.utilities:*</include>
             </includes>
         </dependencySet>
     </dependencySets>
