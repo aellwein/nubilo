@@ -30,6 +30,14 @@
                 <include>*:org.apache.felix.gogo.command</include>
                 <include>*:org.apache.felix.gogo.runtime</include>
                 <include>*:org.apache.felix.gogo.shell</include>
+                <include>*:org.apache.felix.log</include>
+            </includes>
+        </dependencySet>
+
+        <!-- Other runtime bundles -->
+        <dependencySet>
+            <outputDirectory>bundle</outputDirectory>
+            <includes>
             </includes>
         </dependencySet>
 
@@ -45,11 +53,10 @@
 
     <fileSets>
         <fileSet>
-            <directory>src/main/resources</directory>
+            <directory>src/main/resources/conf</directory>
             <outputDirectory>conf</outputDirectory>
             <includes>
-                <include>config.properties</include>
-                <include>nubilo.core.cfg</include>
+                <include>*</include>
             </includes>
         </fileSet>
         <fileSet>
