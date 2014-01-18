@@ -32,20 +32,25 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <root.basedir>${project.basedir}</root.basedir>
-        <licence.year>2013</licence.year>
+        <licence.year>2013-2014</licence.year>
         <licence.author>Juergen Fickel</licence.author>
         <licence.email>steinpfeffer@gmx.de</licence.email>
-        <java.version>1.7</java.version>
-        <slf4j.version>1.7.2</slf4j.version>
-        <osgi.core.version>5.0.0</osgi.core.version>
-        <osgi.compendium.version>5.0.0</osgi.compendium.version>
-        <felix.version>4.2.1</felix.version>
-        <pax-exam.version>3.3.0</pax-exam.version>
-        <utilities.version>1.0.0-SNAPSHOT</utilities.version>
-        <mutabilitydetector.version>0.9</mutabilitydetector.version>
-        <package.prefix>de.steinpfeffer.nubilo</package.prefix>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+
+        <!-- Versions -->
+        <felix.configadmin.version>1.8.0</felix.configadmin.version>
+        <felix.framework.version>4.2.1</felix.framework.version>
+        <jackson.databind.version>2.3.0</jackson.databind.version>
+        <java.version>1.7</java.version>
+        <mutabilitydetector.version>0.9</mutabilitydetector.version>
+        <osgi.compendium.version>5.0.0</osgi.compendium.version>
+        <osgi.core.version>5.0.0</osgi.core.version>
+        <package.prefix>de.steinpfeffer.nubilo</package.prefix>
+        <pax.exam.version>3.3.0</pax.exam.version>
+        <pax.logging.version>1.7.1</pax.logging.version>
+        <slf4j.version>1.7.5</slf4j.version>
+        <utilities.version>1.0.0-SNAPSHOT</utilities.version>
     </properties>
 
     <repositories>
@@ -65,9 +70,67 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                    <executions>
+                        <execution>
+                            <id>generate-copyright-header</id>
+                            <phase>generate-sources</phase>
+                            <configuration>
+                                <target>
+                                    <echo
+                                        file="${project.build.directory}/copyright-header.txt">
+<![CDATA[Copyright ${licence.year} ${licence.author} <${licence.email}>.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.]]>
+                                    </echo>
+                                </target>
+                            </configuration>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
                     <groupId>com.mycila.maven-license-plugin</groupId>
                     <artifactId>maven-license-plugin</artifactId>
-                    <version>1.9.0</version>
+                    <version>1.10.b1</version>
+                    <configuration>
+                        <aggregate>false</aggregate>
+                        <strictCheck>true</strictCheck>
+                        <basedir>.</basedir>
+                        <header>${project.build.directory}/copyright-header.txt</header>
+                        <failIfMissing>true</failIfMissing>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <properties>
+                            <licence.year>${licence.year}</licence.year>
+                            <licence.author>${licence.author}</licence.author>
+                            <licence.email>${licence.email}</licence.email>
+                        </properties>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <plugin>
@@ -92,26 +155,12 @@
 
         <plugins>
             <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+            </plugin>
+
+            <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
-                <inherited>false</inherited>
-                <configuration>
-                    <aggregate>false</aggregate>
-                    <strictCheck>true</strictCheck>
-                    <header>${root.basedir}/src/etc/header.txt</header>
-                    <failIfMissing>true</failIfMissing>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <properties>
-                        <licence.year>${licence.year}</licence.year>
-                        <licence.author>${licence.author}</licence.author>
-                        <licence.email>${licence.email}</licence.email>
-                    </properties>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
-                    <excludes>
-                    </excludes>
-                </configuration>
                 <executions>
                     <execution>
                         <id>format-headers</id>
@@ -128,20 +177,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.11</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.easytesting</groupId>
-                <artifactId>fest-assert-core</artifactId>
-                <version>2.0M10</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>2.0.1</version>
@@ -149,17 +184,11 @@
             </dependency>
 
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>alf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.core</artifactId>
                 <version>${osgi.core.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.compendium</artifactId>
@@ -167,15 +196,39 @@
             </dependency>
 
             <dependency>
+                <groupId>org.ops4j.pax.logging</groupId>
+                <artifactId>pax-logging-service</artifactId>
+                <version>${pax.logging.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.configadmin</artifactId>
+                <version>${felix.configadmin.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <version>${felix.version}</version>
+                <version>${felix.framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.ops4j.pax.logging</groupId>
+                <artifactId>pax-logging-api</artifactId>
+                <version>${pax.logging.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.ops4j.pax.exam</groupId>
                 <artifactId>pax-exam-junit4</artifactId>
-                <version>${pax-exam.version}</version>
+                <version>${pax.exam.version}</version>
             </dependency>
 
             <dependency>
@@ -200,6 +253,26 @@
                 <groupId>de.steinpfeffer.utilities</groupId>
                 <artifactId>utilities-validation</artifactId>
                 <version>${utilities.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.databind.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.11</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.easytesting</groupId>
+                <artifactId>fest-assert-core</artifactId>
+                <version>2.0M10</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
