@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Juergen Fickel <steinpfeffer@gmx.de>.
+ * Copyright 2013-2014 Juergen Fickel <steinpfeffer@gmx.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,21 @@
  */
 package de.steinpfeffer.nubilo.users;
 
+import java.util.Set;
+
 /**
  * TODO Complete Javadoc comment
  * 
  * @author Juergen Fickel
  * @since 1.0.0
  */
-public interface User {
+public interface User extends Comparable<User> {
 
     String getName();
 
     String getDisplayName();
 
-    Group getGroup();
+    Set<Group> getGroups();
 
     Password getPassword();
 

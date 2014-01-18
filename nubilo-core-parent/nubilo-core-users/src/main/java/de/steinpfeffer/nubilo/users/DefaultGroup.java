@@ -1,3 +1,18 @@
+/**
+ * Copyright 2013-2014 Juergen Fickel <steinpfeffer@gmx.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.steinpfeffer.nubilo.users;
 
 import static de.steinpfeffer.utilities.validation.Validator.argumentNotEmpty;
@@ -6,8 +21,6 @@ import static de.steinpfeffer.utilities.validation.Validator.argumentNotNull;
 import javax.annotation.concurrent.Immutable;
 
 import de.steinpfeffer.utilities.hashcode.BaseHashCodeBuilder;
-import de.steinpfeffer.utilities.hashcode.HashCodeBuilder;
-import de.steinpfeffer.utilities.string.ToStringBuilder;
 import de.steinpfefffer.utilities.string.DefaultToStringBuilder;
 
 /**
@@ -43,22 +56,22 @@ public final class DefaultGroup implements Group {
     }
 
     /**
-     * Delivers an instance of {@link DefaultGroup} based on the
-     * provided name. The display name of the returned group is equal
-     * to the provided name.
+     * Delivers an instance of {@link Group} based on the provided
+     * name. The display name of the returned group is equal to the
+     * provided name.
      * 
      * @param name
      *            the technical name of the group, must neither be
      *            {@code null} nor empty!
-     * @return a {@link DefaultGroup} object.
+     * @return a {@link Group} object.
      */
-    public static DefaultGroup getInstance(final String name) {
+    public static Group getInstance(final String name) {
         return getInstance(name, name);
     }
 
     /**
-     * Delivers an instance of {@link DefaultGroup} based on the
-     * provided arguments.
+     * Delivers an instance of {@link Group} based on the provided
+     * arguments.
      * 
      * @param name
      *            the technical name of the group, must neither be
@@ -67,9 +80,9 @@ public final class DefaultGroup implements Group {
      *            the name which is displayed on UIs. May be
      *            {@code null} or empty!; in both cases it will be
      *            replaced by {@code name}.
-     * @return a {@link DefaultGroup} object.
+     * @return a {@link Group} object.
      */
-    public static DefaultGroup getInstance(final String name, final String displayName) {
+    public static Group getInstance(final String name, final String displayName) {
         return new DefaultGroup(name, displayName);
     }
 
@@ -84,10 +97,13 @@ public final class DefaultGroup implements Group {
     }
 
     @Override
+    public int compareTo(final Group o) {
+        return displayName.compareTo(o.getDisplayName());
+    }
+
+    @Override
     public int hashCode() {
-        final HashCodeBuilder builder = BaseHashCodeBuilder.newInstance();
-        builder.hash(name).hash(displayName);
-        return builder.getHashCode();
+        return BaseHashCodeBuilder.newInstance().hash(name).hash(displayName).getHashCode();
     }
 
     @Override
@@ -113,9 +129,8 @@ public final class DefaultGroup implements Group {
 
     @Override
     public String toString() {
-        final ToStringBuilder builder = DefaultToStringBuilder.newInstance(getClass());
-        builder.add("name", name).add("displayName", displayName);
-        return builder.toString();
+        return DefaultToStringBuilder.newInstance(getClass()).add("name", name).add("displayName", displayName)
+                .toString();
     }
 
 }

@@ -15,16 +15,25 @@
  */
 package de.steinpfeffer.nubilo.users;
 
+import static org.mutabilitydetector.unittesting.AllowedReason.provided;
+import static org.mutabilitydetector.unittesting.MutabilityAssert.assertInstancesOf;
+import static org.mutabilitydetector.unittesting.MutabilityMatchers.areImmutable;
+
+import org.junit.Test;
+
 /**
- * TODO Complete Javadoc comment
+ * Component test for {@link DefaultPassword}.
  * 
  * @author Juergen Fickel
- * @since TODO complete
+ * @since 1.0.0
  */
-public interface Password {
+//CHECKSTYLE:OFF
+public final class DefaultPasswordTest {
 
-    Digest getDigest();
-
-    String getHashedPassword();
+    @Test
+    public void defaultPasswordIsImmutable() {
+        assertInstancesOf(DefaultPassword.class, areImmutable(), provided(Digest.class).isAlsoImmutable());
+    }
 
 }
+//CHECKSTYLE:ON

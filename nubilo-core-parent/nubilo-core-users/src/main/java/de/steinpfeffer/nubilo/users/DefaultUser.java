@@ -1,12 +1,29 @@
+/**
+ * Copyright 2013-2014 Juergen Fickel <steinpfeffer@gmx.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.steinpfeffer.nubilo.users;
 
 import static de.steinpfeffer.utilities.validation.Validator.argumentNotEmpty;
 import static de.steinpfeffer.utilities.validation.Validator.argumentNotNull;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.concurrent.Immutable;
 
 import de.steinpfeffer.utilities.hashcode.BaseHashCodeBuilder;
-import de.steinpfeffer.utilities.hashcode.HashCodeBuilder;
 import de.steinpfefffer.utilities.string.DefaultToStringBuilder;
 
 /**
@@ -20,16 +37,17 @@ public final class DefaultUser implements User {
 
     private final String name;
     private final String displayName;
-    private final Group group;
+    private final Set<Group> groups;
     private final Password password;
 
     private DefaultUser(final String theName,
             final String theDisplayName,
-            final Group theGroup,
+            final Set<Group> theGroups,
             final Password thePassword) {
         assertThatArgumentIsNotNull(theName, "name");
         argumentNotEmpty(theName, "The name must not be empty!");
-        assertThatArgumentIsNotNull(theGroup, "group");
+        assertThatArgumentIsNotNull(theGroups, "groups");
+        argumentNotEmpty(theGroups, "The groups must not be empty!");
         assertThatArgumentIsNotNull(thePassword, "password");
         name = theName;
         if (isGivenDisplayNameSuitable(theDisplayName)) {
@@ -37,7 +55,7 @@ public final class DefaultUser implements User {
         } else {
             displayName = name;
         }
-        group = theGroup;
+        groups = new HashSet<>(theGroups);
         password = thePassword;
     }
 
@@ -51,28 +69,28 @@ public final class DefaultUser implements User {
     }
 
     /**
-     * Delivers an instance of {@link DefaultUser} based on the
-     * provided arguments. The display name of the returned group is
-     * equal to the provided name.
+     * Delivers an instance of {@link User} based on the provided
+     * arguments. The display name of the returned group is equal to
+     * the provided name.
      * 
      * @param name
      *            the technical name of the user, must neither be
      *            {@code null} nor empty!
-     * @param group
-     *            the {@link Group} of the user, must not be
-     *            {@code null}.
+     * @param groups
+     *            a {@link Set} of {@link Group}s of the user, must
+     *            neither be {@code null} nor empty.
      * @param password
      *            the {@link Password} of the user, must not be
      *            {@code null}.
-     * @return a {@link DefaultUser} object.
+     * @return a {@link User} instance.
      */
-    public static DefaultUser getInstance(final String name, final Group group, final Password password) {
-        return new DefaultUser(name, name, group, password);
+    public static User getInstance(final String name, final Set<Group> groups, final Password password) {
+        return new DefaultUser(name, name, groups, password);
     }
 
     /**
-     * Delivers an instance of {@link DefaultUser} based on the
-     * provided arguments.
+     * Delivers an instance of {@link User} based on the provided
+     * arguments.
      * 
      * @param name
      *            the technical name of the user, must neither be
@@ -81,19 +99,19 @@ public final class DefaultUser implements User {
      *            the name which is displayed on UIs. May be
      *            {@code null} or empty!; in both cases it will be
      *            replaced by {@code name}.
-     * @param group
-     *            the {@link Group} of the user, must not be
-     *            {@code null}.
+     * @param groups
+     *            a {@link Set} of {@link Group}s of the user, must
+     *            neither be {@code null} nor empty.
      * @param password
      *            the {@link Password} of the user, must not be
      *            {@code null}.
-     * @return a {@link DefaultUser} object.
+     * @return a {@link User} instance.
      */
-    public static DefaultUser getInstance(final String name,
+    public static User getInstance(final String name,
             final String displayName,
-            final Group group,
+            final Set<Group> groups,
             final Password password) {
-        return new DefaultUser(name, displayName, group, password);
+        return new DefaultUser(name, displayName, groups, password);
     }
 
     @Override
@@ -107,8 +125,8 @@ public final class DefaultUser implements User {
     }
 
     @Override
-    public Group getGroup() {
-        return group;
+    public Set<Group> getGroups() {
+        return new HashSet<>(groups);
     }
 
     @Override
@@ -117,10 +135,13 @@ public final class DefaultUser implements User {
     }
 
     @Override
+    public int compareTo(final User o) {
+        return displayName.compareTo(o.getDisplayName());
+    }
+
+    @Override
     public int hashCode() {
-        final HashCodeBuilder builder = BaseHashCodeBuilder.newInstance();
-        builder.hash(name).hash(displayName).hash(group).hash(password);
-        return builder.getHashCode();
+        return BaseHashCodeBuilder.newInstance().hash(name).hash(displayName).hash(groups).hash(password).getHashCode();
     }
 
     @Override
@@ -141,7 +162,7 @@ public final class DefaultUser implements User {
         if (!displayName.equals(other.displayName)) {
             return false;
         }
-        if (!group.equals(other.group)) {
+        if (!groups.equals(other.groups)) {
             return false;
         }
         if (!password.equals(other.password)) {
@@ -152,9 +173,8 @@ public final class DefaultUser implements User {
 
     @Override
     public String toString() {
-        final DefaultToStringBuilder builder = DefaultToStringBuilder.newInstance(getClass());
-        builder.add("name", name).add("displayName", displayName).add("group", group).add("password", "*****");
-        return builder.toString();
+        return DefaultToStringBuilder.newInstance(getClass()).add("name", name).add("displayName", displayName)
+                .add("groups", groups).add("password", "*****").toString();
     }
 
 }

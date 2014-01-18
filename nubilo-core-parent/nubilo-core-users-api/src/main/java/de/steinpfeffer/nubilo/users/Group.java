@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Juergen Fickel <steinpfeffer@gmx.de>.
+ * Copyright 2013-2014 Juergen Fickel <steinpfeffer@gmx.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package de.steinpfeffer.nubilo.users;
  * @author Juergen Fickel
  * @since 1.0.0
  */
-public interface Group {
+public interface Group extends Comparable<Group> {
 
     String getName();
 
