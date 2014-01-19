@@ -32,6 +32,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.steinpfeffer.nubilo.users.beans.UserBean;
@@ -53,6 +56,7 @@ final class JsonUserManagementService implements UserManagementService {
     /* Write users cache to file if this amount of changes occurred. */
     private static final int DIRTY_LIMIT = 10;
 
+    private final Logger logger;
     private final File usersDataFile;
     @GuardedBy("this")
     private final ConcurrentMap<String, User> usersCache;
@@ -65,6 +69,7 @@ final class JsonUserManagementService implements UserManagementService {
     public JsonUserManagementService(final File theUsersDataFile) {
         argumentNotNull(theUsersDataFile, "The users data file must not be null!");
         usersDataFile = theUsersDataFile;
+        logger = LoggerFactory.getLogger(getClass());
         usersCache = new ConcurrentHashMap<>();
         objectMapper = new ObjectMapper();
         dirtyCounter = new AtomicInteger();
@@ -82,11 +87,22 @@ final class JsonUserManagementService implements UserManagementService {
 
     private UserBean[] tryToReadUsersDataFile() {
         try {
-            return objectMapper.readValue(usersDataFile, UserBean[].class);
+            return readUsersDataFile();
         } catch (final IOException e) {
             final String msgTemplate = "Unable to read JSON file with users data: %s";
             throw new UserManagementException(format(msgTemplate, usersDataFile.getAbsolutePath()), e);
         }
+    }
+
+    private UserBean[] readUsersDataFile() throws IOException {
+        final UserBean[] result;
+        if (usersDataFile.exists()) {
+            result = objectMapper.readValue(usersDataFile, UserBean[].class);
+        } else {
+            result = new UserBean[0];
+        }
+        logger.debug("Read {} user bean(s).", result.length);
+        return result;
     }
 
     @Override
@@ -126,10 +142,14 @@ final class JsonUserManagementService implements UserManagementService {
     }
 
     private void writeUsersCacheToFileIfDirtyEnough() {
-        if (DIRTY_LIMIT <= dirtyCounter.intValue()) {
+        if (isDirtyEnough()) {
             tryToWriteUsersCacheToFile();
             dirtyCounter.set(0);
         }
+    }
+
+    private boolean isDirtyEnough() {
+        return DIRTY_LIMIT <= dirtyCounter.intValue();
     }
 
     private void tryToWriteUsersCacheToFile() {
@@ -142,6 +162,19 @@ final class JsonUserManagementService implements UserManagementService {
     }
 
     private void writeUsersCacheToFile() throws IOException {
+        createUsersDataFileIfNecessary();
+        final UserBean[] userBeans = createUserBeans();
+        objectMapper.writeValue(usersDataFile, userBeans);
+        logger.debug("Wrote {} user bean(s) to {}.", userBeans.length, usersDataFile.getAbsolutePath());
+    }
+
+    private void createUsersDataFileIfNecessary() throws IOException {
+        if (!usersDataFile.exists()) {
+            usersDataFile.createNewFile();
+        }
+    }
+
+    private UserBean[] createUserBeans() {
         final Collection<User> users = usersCache.values();
         final UserBean[] userBeans = new UserBean[users.size()];
         final UserEntityConverter userEntityConverter = new UserEntityConverter();
@@ -150,7 +183,7 @@ final class JsonUserManagementService implements UserManagementService {
             userBeans[i] = userEntityConverter.convertToUserBean(user);
             i++;
         }
-        objectMapper.writeValue(usersDataFile, userBeans);
+        return userBeans;
     }
 
     @Override
@@ -188,7 +221,9 @@ final class JsonUserManagementService implements UserManagementService {
     }
 
     public void writeToFileIfDirty() {
-        tryToWriteUsersCacheToFile();
+        if (0 < dirtyCounter.intValue()) {
+            tryToWriteUsersCacheToFile();
+        }
     }
 
 }

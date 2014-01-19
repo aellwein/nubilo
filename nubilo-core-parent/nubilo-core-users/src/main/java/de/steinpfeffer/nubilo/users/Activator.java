@@ -60,9 +60,7 @@ public final class Activator implements BundleActivator {
             if (isUserManagementServiceAlreadyRegistered()) {
                 unregisterUserManagementService();
             }
-            if (null == properties) {
-                throw new ConfigurationException(null, "No configuration properties for user management are defined!");
-            } else {
+            if (null != properties) {
                 registerUserManagementService(properties);
             }
         }
@@ -136,10 +134,14 @@ public final class Activator implements BundleActivator {
     }
 
     private void unregisterUserManagementService() {
-        userManagementServiceRegistration.unregister();
-        userManagementServiceRegistration = null;
-        userManagementService.writeToFileIfDirty();
-        userManagementService = null;
+        if (null != userManagementServiceRegistration) {
+            userManagementServiceRegistration.unregister();
+            userManagementServiceRegistration = null;
+        }
+        if (null != userManagementService) {
+            userManagementService.writeToFileIfDirty();
+            userManagementService = null;
+        }
     }
 
 }

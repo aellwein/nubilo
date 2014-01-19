@@ -49,10 +49,14 @@ final class UserEntityConverter {
     }
 
     private Password convertToUserPassword(final PasswordBean passwordBean) {
-        final String digestString = passwordBean.getDigest();
-        final Digest digest = Digests.valueOf(digestString);
         final String hashedPassword = passwordBean.getHashedPassword();
-        return DefaultPassword.getInstance(digest, hashedPassword);
+        final String digestString = passwordBean.getDigest();
+        for (final Digest digest : Digests.values()) {
+            if (digest.getDigestName().equals(digestString)) {
+                return DefaultPassword.getInstance(digest, hashedPassword);
+            }
+        }
+        throw new UserManagementException("Unable to crete a password from the given password bean.");
     }
 
     public UserBean convertToUserBean(final User user) {
@@ -65,7 +69,20 @@ final class UserEntityConverter {
     }
 
     private GroupBean[] convertToUserGroupBeans(final Set<Group> groups) {
-        return groups.toArray(new GroupBean[groups.size()]);
+        final GroupBean[] result = new GroupBean[groups.size()];
+        int i = 0;
+        for (final Group group : groups) {
+            result[i] = convertToUserGroupBean(group);
+            i++;
+        }
+        return result;
+    }
+
+    private GroupBean convertToUserGroupBean(final Group group) {
+        final GroupBean result = new GroupBean();
+        result.setName(group.getName());
+        result.setDisplayName(group.getDisplayName());
+        return result;
     }
 
     private PasswordBean convertToPasswordBean(final Password password) {
