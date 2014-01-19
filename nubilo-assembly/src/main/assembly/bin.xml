@@ -9,6 +9,7 @@
     <formats>
         <format>tar.gz</format>
         <format>zip</format>
+        <format>dir</format>
     </formats>
 
     <dependencySets>
@@ -24,7 +25,6 @@
         <dependencySet>
             <outputDirectory>bundle</outputDirectory>
             <includes>
-                <include>*:org.apache.felix.bundlerepository</include>
                 <include>*:org.apache.felix.configadmin</include>
                 <include>*:org.apache.felix.fileinstall</include>
                 <include>*:org.apache.felix.gogo.command</include>
@@ -37,6 +37,8 @@
         <dependencySet>
             <outputDirectory>bundle</outputDirectory>
             <includes>
+                <include>org.ops4j.pax.*:*</include>
+                <include>com.fasterxml.jackson.core:*</include>
             </includes>
         </dependencySet>
 
