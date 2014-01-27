@@ -24,7 +24,7 @@ import java.util.Set;
 import javax.annotation.concurrent.Immutable;
 
 import de.steinpfeffer.utilities.hashcode.BaseHashCodeBuilder;
-import de.steinpfefffer.utilities.string.DefaultToStringBuilder;
+import de.steinpfeffer.utilities.string.DefaultToStringBuilder;
 
 /**
  * Default implementation of {@link User}.
