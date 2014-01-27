@@ -56,7 +56,7 @@ final class UserEntityConverter {
                 return DefaultPassword.getInstance(digest, hashedPassword);
             }
         }
-        throw new UserManagementException("Unable to crete a password from the given password bean.");
+        throw new UserManagementException("Unable to create a password from the given password bean.");
     }
 
     public UserBean convertToUserBean(final User user) {
