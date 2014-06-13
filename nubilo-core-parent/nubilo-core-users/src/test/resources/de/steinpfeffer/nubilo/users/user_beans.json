@@ -1,1 +1,0 @@
-[{"name":"foo","displayName":"Foo","groups":[{"name":"users","displayName":"Benutzer"}],"password":{"digest":"SHA-256","hashedPassword":"asdfjklö"}},{"name":"bar","displayName":"Bar","groups":[{"name":"users","displayName":"Benutzer"}],"password":{"digest":"SHA-256","hashedPassword":"asdfjklö"}}]

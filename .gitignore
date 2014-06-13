@@ -1,8 +1,1 @@
-*.checkstyle
-*.classpath
-*.directory
-*.project
-*.releaseBackup
-release.properties
-.settings/
-target/
+.idea/
