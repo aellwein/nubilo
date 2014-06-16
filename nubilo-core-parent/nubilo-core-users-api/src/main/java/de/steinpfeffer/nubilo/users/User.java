@@ -23,9 +23,7 @@ import java.util.Set;
  * @author Juergen Fickel
  * @since 1.0.0
  */
-public interface User extends Comparable<User> {
-
-    String getName();
+public interface User extends Entity, Comparable<User> {
 
     String getDisplayName();
 

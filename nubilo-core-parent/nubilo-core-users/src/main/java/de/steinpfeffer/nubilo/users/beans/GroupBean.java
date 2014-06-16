@@ -17,6 +17,9 @@ package de.steinpfeffer.nubilo.users.beans;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import de.steinpfeffer.utilities.api.hashcode.HashCodeBuilder;
+import de.steinpfeffer.utilities.hashcode.BaseHashCodeBuilder;
+
 /**
  * Java Bean for user a user group.
  * 
@@ -66,6 +69,42 @@ public final class GroupBean {
      */
     public String getDisplayName() {
         return displayName;
+    }
+
+    @Override
+    public int hashCode() {
+        final HashCodeBuilder builder = BaseHashCodeBuilder.newInstance();
+        builder.hash(name).hash(displayName);
+        return builder.getHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof GroupBean)) {
+            return false;
+        }
+        final GroupBean other = (GroupBean) obj;
+        if (displayName == null) {
+            if (other.displayName != null) {
+                return false;
+            }
+        } else if (!displayName.equals(other.displayName)) {
+            return false;
+        }
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        return true;
     }
 
 }

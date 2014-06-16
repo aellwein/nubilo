@@ -25,4 +25,12 @@
             </plugin>
         </plugins>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>de.steinpfeffer.nubilo</groupId>
+            <artifactId>nubilo-core-users-api</artifactId>
+            <version>${project.version}</version>
+            <type>bundle</type>
+        </dependency>
+    </dependencies>
 </project>

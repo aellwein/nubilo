@@ -43,6 +43,7 @@
         <felix.framework.version>4.2.1</felix.framework.version>
         <jackson.databind.version>2.3.0</jackson.databind.version>
         <java.version>1.7</java.version>
+        <mockito.version>1.9.0-rc1</mockito.version>
         <mutabilitydetector.version>0.9</mutabilitydetector.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
         <osgi.core.version>5.0.0</osgi.core.version>
@@ -286,6 +287,13 @@ limitations under the License.]]>
                 <groupId>org.mutabilitydetector</groupId>
                 <artifactId>MutabilityDetector</artifactId>
                 <version>${mutabilitydetector.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

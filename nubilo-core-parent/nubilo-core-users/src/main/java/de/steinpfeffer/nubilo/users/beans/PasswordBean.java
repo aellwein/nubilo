@@ -17,6 +17,9 @@ package de.steinpfeffer.nubilo.users.beans;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import de.steinpfeffer.utilities.api.hashcode.HashCodeBuilder;
+import de.steinpfeffer.utilities.hashcode.BaseHashCodeBuilder;
+
 /**
  * Java Bean for a password.
  * 
@@ -69,6 +72,42 @@ public final class PasswordBean {
      */
     public String getHashedPassword() {
         return hashedPassword;
+    }
+
+    @Override
+    public int hashCode() {
+        final HashCodeBuilder builder = BaseHashCodeBuilder.newInstance();
+        builder.hash(digest).hash(hashedPassword);
+        return builder.getHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof PasswordBean)) {
+            return false;
+        }
+        final PasswordBean other = (PasswordBean) obj;
+        if (digest == null) {
+            if (other.digest != null) {
+                return false;
+            }
+        } else if (!digest.equals(other.digest)) {
+            return false;
+        }
+        if (hashedPassword == null) {
+            if (other.hashedPassword != null) {
+                return false;
+            }
+        } else if (!hashedPassword.equals(other.hashedPassword)) {
+            return false;
+        }
+        return true;
     }
 
 }

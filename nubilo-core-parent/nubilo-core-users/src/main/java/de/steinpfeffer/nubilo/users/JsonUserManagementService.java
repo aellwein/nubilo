@@ -16,26 +16,14 @@
 package de.steinpfeffer.nubilo.users;
 
 import static de.steinpfeffer.utilities.validation.Validator.argumentNotNull;
-import static java.lang.String.format;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map;
 
-import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.steinpfeffer.nubilo.users.beans.UserBean;
 
@@ -51,179 +39,59 @@ import de.steinpfeffer.nubilo.users.beans.UserBean;
  * @since 1.0.0
  */
 @ThreadSafe
-final class JsonUserManagementService implements UserManagementService {
+final class JsonUserManagementService extends AbstractJsonEntityManagementService<UserBean, User> {
 
-    /* Write users cache to file if this amount of changes occurred. */
-    private static final int DIRTY_LIMIT = 10;
+    private final EntityManagementService<Group> groupManagementService;
 
-    private final Logger logger;
-    private final File usersDataFile;
-    @GuardedBy("this")
-    private final ConcurrentMap<String, User> usersCache;
-    private final ObjectMapper objectMapper;
-    private final AtomicInteger dirtyCounter;
-
-    /**
-     * Constructs a new {@link JsonUserManagementService} object.
-     */
-    public JsonUserManagementService(final File theUsersDataFile) {
-        argumentNotNull(theUsersDataFile, "The users data file must not be null!");
-        usersDataFile = theUsersDataFile;
-        logger = LoggerFactory.getLogger(getClass());
-        usersCache = new ConcurrentHashMap<>();
-        objectMapper = new ObjectMapper();
-        dirtyCounter = new AtomicInteger();
-        initialiseUsersCache();
+    public JsonUserManagementService(final JsonFileAccessor<UserBean> fileAccessor,
+            final EntityCache<User> usersCache,
+            final EntityManagementService<Group> theGroupManagementService,
+            final EntityConverter entityConverter) {
+        super(fileAccessor, usersCache, entityConverter);
+        argumentNotNull(theGroupManagementService);
+        groupManagementService = theGroupManagementService;
     }
 
-    private void initialiseUsersCache() {
-        final UserBean[] userBeans = tryToReadUsersDataFile();
-        final UserEntityConverter userEntityConverter = new UserEntityConverter();
+    public JsonUserManagementService(final int dirtyLimit,
+            final JsonFileAccessor<UserBean> fileAccessor,
+            final EntityCache<User> usersCache,
+            final EntityManagementService<Group> theGroupManagementService,
+            final EntityConverter entityConverter) {
+        super(dirtyLimit, fileAccessor, usersCache, entityConverter);
+        argumentNotNull(theGroupManagementService);
+        groupManagementService = theGroupManagementService;
+    }
+
+    @Override
+    protected UserBean[] readEntityBeansFromFile(final FileAccessor<UserBean> fileAccessor) throws IOException {
+        return fileAccessor.readBeansFromFile(UserBean[].class);
+    }
+
+    @Override
+    protected EntityCache<User> initialiseCache(final UserBean[] userBeans,
+            final EntityConverter entityConverter,
+            final EntityCache<User> usersCache) {
+        final Map<String, Group> allGroups = getAllGroupsAsMap();
         for (final UserBean userBean : userBeans) {
-            final User user = userEntityConverter.convertToUser(userBean);
-            usersCache.put(user.getName(), user);
+            final User user = entityConverter.convertToUser(userBean, allGroups);
+            usersCache.add(user);
         }
+        return usersCache;
     }
 
-    private UserBean[] tryToReadUsersDataFile() {
-        try {
-            return readUsersDataFile();
-        } catch (final IOException e) {
-            final String msgTemplate = "Unable to read JSON file with users data: %s";
-            throw new UserManagementException(format(msgTemplate, usersDataFile.getAbsolutePath()), e);
+    private Map<String, Group> getAllGroupsAsMap() {
+        final List<Group> allGroups = groupManagementService.getAllEntities();
+        final Map<String, Group> result = new HashMap<>(allGroups.size());
+        for (final Group group : allGroups) {
+            result.put(group.getName(), group);
         }
-    }
-
-    private UserBean[] readUsersDataFile() throws IOException {
-        final UserBean[] result;
-        if (usersDataFile.exists()) {
-            result = objectMapper.readValue(usersDataFile, UserBean[].class);
-        } else {
-            result = new UserBean[0];
-        }
-        logger.debug("Read {} user bean(s).", result.length);
         return result;
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return new ArrayList<User>(usersCache.values());
-    }
-
-    @Override
-    public List<Group> getAllGroups() {
-        final Set<Group> groups = new HashSet<>();
-        for (final User user : usersCache.values()) {
-            groups.addAll(user.getGroups());
-        }
-        return new ArrayList<Group>(groups);
-    }
-
-    @Override
-    public User getUser(final String name) {
-        return usersCache.get(name);
-    }
-
-    @Override
-    public void manageUser(final User user) throws UserManagementException {
-        if (null == user) {
-            return;
-        }
-        synchronized (this) {
-            final String username = user.getName();
-            if (usersCache.containsKey(username)) {
-                final String msgTemplate = "A user with the name '%s' is already managed by Nubilo.";
-                throw new UserManagementException(format(msgTemplate, username));
-            }
-            usersCache.put(username, user);
-            dirtyCounter.incrementAndGet();
-        }
-        writeUsersCacheToFileIfDirtyEnough();
-    }
-
-    private void writeUsersCacheToFileIfDirtyEnough() {
-        if (isDirtyEnough()) {
-            tryToWriteUsersCacheToFile();
-            dirtyCounter.set(0);
-        }
-    }
-
-    private boolean isDirtyEnough() {
-        return DIRTY_LIMIT <= dirtyCounter.intValue();
-    }
-
-    private void tryToWriteUsersCacheToFile() {
-        try {
-            writeUsersCacheToFile();
-        } catch (final IOException e) {
-            final String msgTemplate = "Unable to write users data to JSON file: %s";
-            throw new UserManagementException(format(msgTemplate, usersDataFile.getAbsolutePath()), e);
-        }
-    }
-
-    private void writeUsersCacheToFile() throws IOException {
-        createUsersDataFileIfNecessary();
-        final UserBean[] userBeans = createUserBeans();
-        objectMapper.writeValue(usersDataFile, userBeans);
-        logger.debug("Wrote {} user bean(s) to {}.", userBeans.length, usersDataFile.getAbsolutePath());
-    }
-
-    private void createUsersDataFileIfNecessary() throws IOException {
-        if (!usersDataFile.exists()) {
-            usersDataFile.createNewFile();
-        }
-    }
-
-    private UserBean[] createUserBeans() {
-        final Collection<User> users = usersCache.values();
-        final UserBean[] userBeans = new UserBean[users.size()];
-        final UserEntityConverter userEntityConverter = new UserEntityConverter();
-        int i = 0;
-        for (final User user : users) {
-            userBeans[i] = userEntityConverter.convertToUserBean(user);
-            i++;
-        }
-        return userBeans;
-    }
-
-    @Override
-    public void updateUser(final User user) {
-        if (null == user) {
-            return;
-        }
-        final String username = user.getName();
-        synchronized (this) {
-            if (!usersCache.containsKey(username)) {
-                final String msgTemplate = "A user with the name '%s' is unknown!";
-                throw new UserManagementException(format(msgTemplate, username));
-            }
-            usersCache.put(username, user);
-            dirtyCounter.incrementAndGet();
-        }
-        writeUsersCacheToFileIfDirtyEnough();
-    }
-
-    @Override
-    public void deleteUser(final User user) throws UserManagementException {
-        if (null == user) {
-            return;
-        }
-        final String username = user.getName();
-        synchronized (this) {
-            if (!usersCache.containsKey(username)) {
-                final String msgTemplate = "A user with the name '%s' is unknown!";
-                throw new UserManagementException(format(msgTemplate, username));
-            }
-            usersCache.remove(username);
-            dirtyCounter.incrementAndGet();
-        }
-        writeUsersCacheToFileIfDirtyEnough();
-    }
-
-    public void writeToFileIfDirty() {
-        if (0 < dirtyCounter.intValue()) {
-            tryToWriteUsersCacheToFile();
-        }
+    protected List<UserBean> convertEntitiesToBeans(final EntityConverter entityConverter,
+            final Collection<User> allUsers) {
+        return entityConverter.convertToUserBeans(allUsers);
     }
 
 }

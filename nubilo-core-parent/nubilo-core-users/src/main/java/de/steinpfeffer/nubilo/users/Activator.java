@@ -28,6 +28,9 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
 
+import de.steinpfeffer.nubilo.users.beans.GroupBean;
+import de.steinpfeffer.nubilo.users.beans.UserBean;
+
 /**
  * {@link BundleActivator} for the Nubilo core user management.
  * 
@@ -71,10 +74,32 @@ public final class Activator implements BundleActivator {
 
         private void registerUserManagementService(final Dictionary<String, ?> properties)
                 throws ConfigurationException {
+            final EntityConverter entityConverter = new EntityConverter();
+
+            final File groupsDataFile = getGroupDataFile(properties);
+            final JsonFileAccessor<GroupBean> jsonGroupFileAccessor = new JsonFileAccessor<>(groupsDataFile);
+            final EntityCache<Group> groupsCache = DefaultEntityCache.getInstance();
+            groupManagementService = new JsonGroupManagementService(jsonGroupFileAccessor, groupsCache, entityConverter);
+            final Dictionary<String, Object> groupManagementServiceProperties = new Hashtable<>();
+            groupManagementServiceProperties.put("entityType", Group.class);
+            groupManagementServiceRegistration = bundleContext.registerService(EntityManagementService.class,
+                    groupManagementService, groupManagementServiceProperties);
+
             final File usersDataFile = getUsersDataFile(properties);
-            userManagementService = new JsonUserManagementService(usersDataFile);
-            userManagementServiceRegistration = bundleContext.registerService(UserManagementService.class,
-                    userManagementService, null);
+            final JsonFileAccessor<UserBean> jsonUserFileAccessor = new JsonFileAccessor<>(usersDataFile);
+            final EntityCache<User> usersCache = DefaultEntityCache.getInstance();
+            userManagementService = new JsonUserManagementService(jsonUserFileAccessor, usersCache,
+                    groupManagementService, entityConverter);
+            final Dictionary<String, Object> userManagementServiceProperties = new Hashtable<>();
+            userManagementServiceProperties.put("entityType", User.class);
+            userManagementServiceRegistration = bundleContext.registerService(EntityManagementService.class,
+                    userManagementService, userManagementServiceProperties);
+        }
+
+        private File getGroupDataFile(final Dictionary<String, ?> properties) throws ConfigurationException {
+            final String dataDir = safelyGetProperty(properties, "data.dir");
+            final String groupsDataResource = safelyGetProperty(properties, "groups.data.resource");
+            return new File(dataDir, groupsDataResource);
         }
 
         private File getUsersDataFile(final Dictionary<String, ?> properties) throws ConfigurationException {
@@ -96,16 +121,20 @@ public final class Activator implements BundleActivator {
 
     private static final String CONFIG_PID = "nubilo.core";
 
+    private volatile JsonGroupManagementService groupManagementService;
     private volatile JsonUserManagementService userManagementService;
-    private volatile ServiceRegistration<ManagedService> userManagementServiceUpdaterRegistration;
-    private volatile ServiceRegistration<UserManagementService> userManagementServiceRegistration;
+    private volatile ServiceRegistration<?> groupManagementServiceRegistration;
+    private volatile ServiceRegistration<?> userManagementServiceUpdaterRegistration;
+    private volatile ServiceRegistration<?> userManagementServiceRegistration;
 
     /**
      * Constructs a new {@link Activator} object.
      */
     public Activator() {
+        groupManagementService = null;
         userManagementService = null;
         userManagementServiceUpdaterRegistration = null;
+        groupManagementServiceRegistration = null;
         userManagementServiceRegistration = null;
     }
 
@@ -125,12 +154,8 @@ public final class Activator implements BundleActivator {
     @Override
     public void stop(final BundleContext bundleContext) throws Exception {
         unregisterUserManagementService();
+        unregisterGroupManagementService();
         unregisterUserManagementServiceUpdater();
-    }
-
-    private void unregisterUserManagementServiceUpdater() {
-        userManagementServiceUpdaterRegistration.unregister();
-        userManagementServiceUpdaterRegistration = null;
     }
 
     private void unregisterUserManagementService() {
@@ -142,6 +167,22 @@ public final class Activator implements BundleActivator {
             userManagementService.writeToFileIfDirty();
             userManagementService = null;
         }
+    }
+
+    private void unregisterGroupManagementService() {
+        if (null != groupManagementServiceRegistration) {
+            groupManagementServiceRegistration.unregister();
+            groupManagementServiceRegistration = null;
+        }
+        if (null != groupManagementService) {
+            groupManagementService.writeToFileIfDirty();
+            groupManagementService = null;
+        }
+    }
+
+    private void unregisterUserManagementServiceUpdater() {
+        userManagementServiceUpdaterRegistration.unregister();
+        userManagementServiceUpdaterRegistration = null;
     }
 
 }

@@ -15,7 +15,12 @@
  */
 package de.steinpfeffer.nubilo.users.beans;
 
+import java.util.Arrays;
+
 import javax.annotation.concurrent.NotThreadSafe;
+
+import de.steinpfeffer.utilities.api.hashcode.HashCodeBuilder;
+import de.steinpfeffer.utilities.hashcode.BaseHashCodeBuilder;
 
 /**
  * Java Bean for a user.
@@ -28,7 +33,7 @@ public final class UserBean {
 
     private String name;
     private String displayName;
-    private GroupBean[] groups;
+    private String[] groups;
     private PasswordBean password;
 
     /**
@@ -74,9 +79,9 @@ public final class UserBean {
      * Sets an array of the user's groups.
      * 
      * @param groups
-     *            the groups to which the user belongs.
+     *            the names of the groups to which the user belongs.
      */
-    public void setGroups(final GroupBean[] groups) {
+    public void setGroups(final String[] groups) {
         this.groups = groups;
     }
 
@@ -85,7 +90,7 @@ public final class UserBean {
      * 
      * @return the groups to which this user belongs.
      */
-    public GroupBean[] getGroups() {
+    public String[] getGroups() {
         return groups;
     }
 
@@ -107,5 +112,53 @@ public final class UserBean {
     public PasswordBean getPassword() {
         return password;
     }
+
+    @Override
+    public int hashCode() {
+        final HashCodeBuilder builder = BaseHashCodeBuilder.newInstance();
+        builder.hash(name).hash(displayName).hash(groups).hash(password);
+        return builder.getHashCode();
+    }
+
+    // CHECKSTYLE:OFF
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof UserBean)) {
+            return false;
+        }
+        final UserBean other = (UserBean) obj;
+        if (displayName == null) {
+            if (other.displayName != null) {
+                return false;
+            }
+        } else if (!displayName.equals(other.displayName)) {
+            return false;
+        }
+        if (!Arrays.equals(groups, other.groups)) {
+            return false;
+        }
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        if (password == null) {
+            if (other.password != null) {
+                return false;
+            }
+        } else if (!password.equals(other.password)) {
+            return false;
+        }
+        return true;
+    }
+    // CHECKSTYLE:OFF
 
 }

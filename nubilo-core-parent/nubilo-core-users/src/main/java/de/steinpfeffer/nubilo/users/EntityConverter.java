@@ -15,8 +15,11 @@
  */
 package de.steinpfeffer.nubilo.users;
 
-import java.util.HashSet;
-import java.util.Set;
+import static java.lang.String.format;
+
+import java.util.*;
+
+import javax.annotation.concurrent.Immutable;
 
 import de.steinpfeffer.nubilo.users.beans.GroupBean;
 import de.steinpfeffer.nubilo.users.beans.PasswordBean;
@@ -28,24 +31,23 @@ import de.steinpfeffer.nubilo.users.beans.UserBean;
  * @author Juergen Fickel
  * @since 1.0.0
  */
-final class UserEntityConverter {
+@Immutable
+final class EntityConverter {
 
-    public User convertToUser(final UserBean userBean) {
+    public User convertToUser(final UserBean userBean, final Map<String, Group> allGroups) {
         final String name = userBean.getName();
         final String displayName = userBean.getDisplayName();
-        final Set<Group> groups = convertToUserGroups(userBean.getGroups());
+        final Set<Group> groups = new HashSet<>();
+        for (final String groupName : userBean.getGroups()) {
+            final Group group = allGroups.get(groupName);
+            if (null == group) {
+                throw new UserManagementException(format("The group '%s' does not exist!", groupName));
+            } else {
+                groups.add(group);
+            }
+        }
         final Password password = convertToUserPassword(userBean.getPassword());
         return DefaultUser.getInstance(name, displayName, groups, password);
-    }
-
-    private Set<Group> convertToUserGroups(final GroupBean[] groupBeans) {
-        final Set<Group> result = new HashSet<>(groupBeans.length);
-        for (final GroupBean groupBean : groupBeans) {
-            final String name = groupBean.getName();
-            final String displayName = groupBean.getDisplayName();
-            result.add(DefaultGroup.getInstance(name, displayName));
-        }
-        return result;
     }
 
     private Password convertToUserPassword(final PasswordBean passwordBean) {
@@ -59,29 +61,36 @@ final class UserEntityConverter {
         throw new UserManagementException("Unable to create a password from the given password bean.");
     }
 
-    public UserBean convertToUserBean(final User user) {
-        final UserBean result = new UserBean();
-        result.setName(user.getName());
-        result.setDisplayName(user.getDisplayName());
-        result.setGroups(convertToUserGroupBeans(user.getGroups()));
-        result.setPassword(convertToPasswordBean(user.getPassword()));
-        return result;
+    public Group convertToGroup(final GroupBean groupBean) {
+        final String name = groupBean.getName();
+        final String displayName = groupBean.getDisplayName();
+        return DefaultGroup.getInstance(name, displayName);
     }
 
-    private GroupBean[] convertToUserGroupBeans(final Set<Group> groups) {
-        final GroupBean[] result = new GroupBean[groups.size()];
-        int i = 0;
-        for (final Group group : groups) {
-            result[i] = convertToUserGroupBean(group);
-            i++;
+    public List<UserBean> convertToUserBeans(final Collection<User> users) {
+        final List<UserBean> result = new ArrayList<>(users.size());
+        for (final User user : users) {
+            result.add(convertToUserBean(user));
         }
         return result;
     }
 
-    private GroupBean convertToUserGroupBean(final Group group) {
-        final GroupBean result = new GroupBean();
-        result.setName(group.getName());
-        result.setDisplayName(group.getDisplayName());
+    private UserBean convertToUserBean(final User user) {
+        final UserBean result = new UserBean();
+        result.setName(user.getName());
+        result.setDisplayName(user.getDisplayName());
+        result.setGroups(getGroupNames(user.getGroups()));
+        result.setPassword(convertToPasswordBean(user.getPassword()));
+        return result;
+    }
+
+    private String[] getGroupNames(final Set<Group> groups) {
+        final String[] result = new String[groups.size()];
+        int i = 0;
+        for (final Group group : groups) {
+            result[i] = group.getName();
+            i++;
+        }
         return result;
     }
 
@@ -89,6 +98,21 @@ final class UserEntityConverter {
         final PasswordBean result = new PasswordBean();
         result.setDigest(password.getDigest().getDigestName());
         result.setHashedPassword(password.getHashedPassword());
+        return result;
+    }
+
+    public List<GroupBean> convertToGroupBeans(final Collection<Group> groups) {
+        final List<GroupBean> result = new ArrayList<>(groups.size());
+        for (final Group group : groups) {
+            result.add(convertToGroupBean(group));
+        }
+        return result;
+    }
+
+    private GroupBean convertToGroupBean(final Group group) {
+        final GroupBean result = new GroupBean();
+        result.setName(group.getName());
+        result.setDisplayName(group.getDisplayName());
         return result;
     }
 

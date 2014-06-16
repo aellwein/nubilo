@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.steinpfeffer.nubilo.users;
+package de.steinpfeffer.nubilo.core.persistence;
 
 /**
  * TODO Complete Javadoc comment
@@ -21,12 +21,8 @@ package de.steinpfeffer.nubilo.users;
  * @author Juergen Fickel
  * @since 1.0.0
  */
-public interface Group extends Entity, Comparable<Group> {
+public interface Predicate {
 
-    String getDisplayName();
-
-    int hashCode();
-
-    boolean equals(Object other);
+    Criteria getCriteria();
 
 }

@@ -19,9 +19,7 @@ import java.util.List;
 
 /**
  * Service for user management like creating, retrieving or deleting
- * user entities. User management implicitly includes group
- * management; so if all users of a group are deleted the group will
- * be gone, too.
+ * user entities.
  * 
  * @author Juergen Fickel
  * @since 1.0.0
@@ -36,15 +34,6 @@ public interface UserManagementService {
      *         {@code null}.
      */
     List<User> getAllUsers();
-
-    /**
-     * Gets a {@link List} of all {@link Group}s which are managed by
-     * Nubilo.
-     * 
-     * @return all Nubilo groups or an empty {@link List} but never
-     *         {@code null}.
-     */
-    List<Group> getAllGroups();
 
     /**
      * Gets the {@link User} with the given {@code name}.
@@ -76,7 +65,7 @@ public interface UserManagementService {
      * @param user
      *            the user to update.
      * @throws UserManagementException
-     *             if {@code user} is not yet managed by Nubilo.
+     *             if {@code User} is not yet managed by Nubilo.
      * @see #deleteUser(User)
      * @see #manageUser(User)
      */

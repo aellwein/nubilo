@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.steinpfeffer.nubilo.users;
+package de.steinpfeffer.nubilo.core.persistence;
+
+import de.steinpfeffer.nubilo.users.Group;
+import de.steinpfeffer.nubilo.users.Password;
+import de.steinpfeffer.nubilo.users.User;
 
 /**
  * TODO Complete Javadoc comment
@@ -21,12 +25,10 @@ package de.steinpfeffer.nubilo.users;
  * @author Juergen Fickel
  * @since 1.0.0
  */
-public interface Group extends Entity, Comparable<Group> {
+public interface UserPersistence {
 
-    String getDisplayName();
+    User createUser(String username, String displayName, Group group, Password password);
 
-    int hashCode();
-
-    boolean equals(Object other);
+    User getUserByName(String username);
 
 }
