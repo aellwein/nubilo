@@ -75,7 +75,7 @@ class PluginManager(object):
         if len(self.plugins) <= len(self.plugin_dir_content):
             return
         self.logger.debug("Some plugins were removed.")
-        for plugin in self.plugins.keys():
+        for plugin in list(self.plugins.keys()):
             if plugin not in self.plugin_dir_content:
                 self.unload_plugin(plugin)
 
