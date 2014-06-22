@@ -16,29 +16,26 @@
 # limitations under the License.
 
 from unittest.case import TestCase
+from unittest.mock import MagicMock
 from unittest.runner import TextTestRunner
 from unittest.suite import TestSuite
+import sys
 
-from core.user import User
+from core.config import Config
+from core.log import Logger
+from core.plugin import PluginManager
 
 
-class UserTest(TestCase):
-    def test_default_user_is_not_authenticated(self):
-        self.user = User("Alex")
-        self.assertFalse(self.user.is_authenticated(), "default user may not be authenticated")
-
-    def test_default_user_is_not_anonymous(self):
-        self.user = User("Alex")
-        self.assertFalse(self.user.is_anonymous(), "default user may not be anonymous")
-
-    def test_default_user_is_active(self):
-        self.user = User("Alex")
-        self.assertTrue(self.user.is_active())
+class PluginTest(TestCase):
+    def test_invalid_plugins(self):
+        app = MagicMock()
+        app.config = dict(nubilo_logger=Logger(sys.stderr), nubilo_config=Config())
+        plugin_manager = PluginManager(app)
 
 
 def suite():
     _suite = TestSuite()
-    _suite.addTest(UserTest)
+    _suite.addTest(PluginTest)
     return _suite
 
 

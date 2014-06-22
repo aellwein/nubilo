@@ -15,54 +15,54 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import sys
 
 from flask.app import Flask
-import sys
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
+
+from core.config import Config
+from core.log import Logger
 from core.plugin import PluginManager
 
 
-def plugin_injector(func):
-    def wrapped(*args, **kwargs):
-        func(*args, **kwargs)
-    wrapped()
-
 class NubiloCore():
-    config = {}
-    config_path = os.path.abspath(os.path.join(os.getcwd(), os.path.dirname(__file__), "nubilo.conf"))
-    plugin_path = os.path.abspath(os.path.join(os.getcwd(), os.path.dirname(__file__), "plugins"))
     plugin_manager = None
+    user_dir = None
+    logger = None
+    config = None
 
     def __init__(self, _app):
         self.app = _app
+        self.config = self.app.config["nubilo_config"]
+        self.logger = self.app.config["nubilo_logger"]
 
     def start(self):
-        self.read_config()
-        app.config.update(self.config)
-        app.config['nubilo_plugin_path'] = self.plugin_path
         self.plugin_manager = PluginManager(app)
         self.plugin_manager.start()
 
-    def read_config(self):
-        with open(self.config_path, "r") as f:
-            for line in f.readlines():
-                if line.lstrip().startswith('#'):
-                    continue
-                keyval = line.strip().split('=')
-                if len(keyval) == 2:
-                    self.config[keyval[0].strip()] = keyval[1].strip()
-
 
 if __name__ == "__main__":
+
+    app = Flask(__name__)
+    if "--debug" in sys.argv:
+        app.config["DEBUG"] = True
+
+    config = Config()
+    app.config["nubilo_config"] = config
+
+    logger = Logger(config.nubilo_logfile, config.nubilo_colored_log, app.config["DEBUG"])
+    app.config["nubilo_logger"] = logger
+
     try:
-        app = Flask(__name__)
         nubilo_core = NubiloCore(app)
         nubilo_core.start()
+
         http_server = HTTPServer(WSGIContainer(app))
-        http_server.listen(app.config['nubilo_listen_port'])
+        http_server.listen(config.nubilo_listen_port)
         IOLoop.instance().start()
+
     except KeyboardInterrupt:
+        logger.warning("Nubilo is stopped by KeyboardInterrupt.")
         sys.exit(1)
