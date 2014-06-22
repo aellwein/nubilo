@@ -19,7 +19,7 @@ import sys
 from time import localtime, strftime
 
 
-class Logger():
+class Logger(object):
     """
     A logger which can be used to log messages to a logfile or stderr/stdout with different loglevels (severities).
     """
@@ -61,7 +61,7 @@ class Logger():
         time = strftime("%c", localtime())
         if self.colored:
             self.log_fd.write(
-                "%s%s [%s] %s%s\n" % ( self.color_codes[color], time, level, msg, self.color_codes["reset"]))
+                "%s%s [%s] %s%s\n" % (self.color_codes[color], time, level, msg, self.color_codes["reset"]))
         else:
             self.log_fd.write("%s [%s] %s\n" % (time, level, msg))
         self.log_fd.flush()
