@@ -72,7 +72,8 @@ class Plugin(object):
             self._plugin_unload = getattr(self._module, "plugin_unload")
         except AttributeError as e:
             self._logger.error("Error searching for valid entry points: %s" % e)
-            self._logger.error("Plugin '%s' must implement 'plugin_load(**kwargs)' and 'plugin_unload(**kwargs)'" % self._name)
+            self._logger.error("Plugin '%s' must implement 'plugin_load(**kwargs)'\
+                    and 'plugin_unload(**kwargs)'" % self._name)
             self._logger.error("methods as its entry and exit points.")
             self._logger.error("Marking plugin '%s' as invalid." % self._name)
             del sys.modules["plugins.%s.%s" % (self._name, self._name)]
