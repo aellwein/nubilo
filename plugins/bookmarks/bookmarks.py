@@ -36,10 +36,10 @@ class Database():
         self._database = None
 
     def open(self):
+        self._connect()
         self._initialise_if_necessary()
 
     def _initialise_if_necessary(self):
-        self._connect()
         if not self._is_initialised():
             self._initialise()
 
