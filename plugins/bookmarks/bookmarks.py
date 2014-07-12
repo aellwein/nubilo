@@ -17,8 +17,7 @@
 
 import os
 import sqlite3
-from flask import app, session, abort
-from flask.app import Flask
+from flask import app, session, abort, Flask
 
 
 class Database():
@@ -64,18 +63,26 @@ class Database():
     def _initialise(self):
         """Initialises the database. This drops all existing data and should be used with care!"""
         self._logger.debug("Initialising database \"%s\"." % self._database_file)
-        ddl_script = open(self._schema_file)
+        ddl_script = open(os.path.abspath(os.path.join("plugins/bookmarks", self._schema_file)))
         self._database.cursor().executescript(ddl_script.read())
         ddl_script.close()
         self._database.commit()
 
     def get_all_bookmarks(self):
         cur = self._database.cursor()
-        cur.execute("SELECT * FROM bookmarks")
+        cur.execute("SELECT uri, title, description FROM bookmarks")
         all_bookmarks = cur.fetchall()
+        print(all_bookmarks)
         for bm in all_bookmarks:
             # TODO create Bookmark objects based on database data
             pass
+        return all_bookmarks
+
+    def insert_bookmark(self, bookmark):
+        cur = self._database.cursor()
+        cur.execute("INSERT INTO bookmarks (uri, title, description) VALUES (?, ?, ?)",
+                (bookmark.uri, bookmark.title, bookmark.description))
+        self._database.commit()
 
     def close(self):
         self._database.close()
@@ -121,7 +128,7 @@ class BookmarkManager():
     def stop(self):
         self._database.close()
 
-    @app.route("/")
+    #@app.route("/")
     def get_all_bookmarks(self):
         if not session.get("logged_in"):
             abort(401)

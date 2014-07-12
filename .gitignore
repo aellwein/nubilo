@@ -1,3 +1,3 @@
 .idea/
-plugins/bookmarks/bookmarks.db
+*.db
 __pycache__/

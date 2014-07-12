@@ -7,30 +7,35 @@ from unittest.suite import TestSuite
 
 from core.config import Config
 from core.log import Logger
-
-class BookmarksTest(TestCase):
-    pass
+from plugins.bookmarks.bookmarks import Bookmark, Database
 
 class DatabaseTest(TestCase):
-    def __init__(self):
-        self._db = None
-
     def setUp(self):
         app = MagicMock()
         app.config = dict(nubilo_logger=Logger(sys.stderr), nubilo_config=Config())
+        # TODO use dedicated test database instead of real one
         self._db = Database(app.config["nubilo_logger"])
         self._db.open()
         self._db._initialise()
 
-    def database_is_initialised(self):
+    def test_database_is_initialised(self):
         self.assertTrue(self._db._is_initialised())
+
+    def test_database_contains_no_bookmarks_initially(self):
+        bookmarks = self._db.get_all_bookmarks()
+        self.assertTrue(0 == len(bookmarks))
+
+    def test_database_contains_one_bookmark_after_insertion(self):
+        self._db.insert_bookmark(Bookmark("foo", "bar", "baz"))
+        bookmarks = self._db.get_all_bookmarks()
+
+        self.assertTrue(1 == len(bookmarks))
 
     def tearDown(self):
         self._db.close()
 
 def suite():
     result = TestSuite()
-    result.addTest(BookmarksTest)
     result.addTest(DatabaseTest)
     return result
 
