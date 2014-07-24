@@ -97,16 +97,17 @@ class Database():
             result = set()
             # TODO This can definitely be optimised
             for tagged_entry in self._database.execute("SELECT tag FROM tagged WHERE bookmark = ?", (bookmark_id,)):
-                for tag_entry in self._database.execute("SELECT name FROM tags WHERE tag_id = ?", (tagged_entry[0],)):
-                    result.add(tag_entry[0])
+                for tag_entry in self._database.execute("SELECT name FROM tags WHERE tag_id = ?",
+                        (tagged_entry["tag"],)):
+                    result.add(tag_entry["name"])
             return result
 
         result = []
         for bookmark_entry in self._database.execute("SELECT bookmark_id, uri, title, description FROM bookmarks"):
-            bookmark_id = bookmark_entry[0]
-            bookmark_uri = bookmark_entry[1]
-            bookmark_title = bookmark_entry[2]
-            bookmark_description = bookmark_entry[3]
+            bookmark_id = bookmark_entry["bookmark_id"]
+            bookmark_uri = bookmark_entry["uri"]
+            bookmark_title = bookmark_entry["title"]
+            bookmark_description = bookmark_entry["description"]
             bookmark_tags = get_tag_names(bookmark_id)
             result.append(Bookmark(bookmark_uri, bookmark_title, bookmark_description, bookmark_tags))
         return result
@@ -117,34 +118,45 @@ class Database():
         Args:
             bookmark: The Bookmark object to insert into the database.
         """
+        def insert_bookmark_entry():
+            cur.execute("INSERT INTO bookmarks (uri, title, description) VALUES (?, ?, ?)",
+                    (bookmark.uri, bookmark.title, bookmark.description))
+            self._database.commit()
+
+        def get_bookmark_id():
+            result = -1
+            for bookmark_entry in self._database.execute(("SELECT bookmark_id FROM bookmarks "
+                    "WHERE uri = ? AND title = ? AND description = ?"),
+                    (bookmark.uri, bookmark.title, bookmark.description)):
+                if None is not bookmark_entry:
+                    result = bookmark_entry["bookmark_id"]
+            return result
+
         def get_tag_id_for(tag):
             result = None
             cur.execute("SELECT tag_id FROM tags WHERE name = ?", (tag,))
             tag_id_entry = cur.fetchone()
             if None is not tag_id_entry:
-                result = tag_id_entry[0]
+                result = tag_id_entry["tag_id"]
             return result
 
+        def insert_tag_entry(tag_id, tag):
+            cur.execute("INSERT INTO tags (name) VALUES (?)", (tag,))
+            self._database.commit()
+
+        def insert_tagged_entry(bookmark_id, tag_id):
+            cur.execute("INSERT INTO tagged (bookmark, tag) VALUES (?, ?)", (bookmark_id, tag_id))
+
         cur = self._database.cursor()
-        cur.execute("INSERT INTO bookmarks (uri, title, description) VALUES (?, ?, ?)",
-                (bookmark.uri, bookmark.title, bookmark.description))
-        self._database.commit()
+        insert_bookmark_entry()
+        bookmark_id = get_bookmark_id()
 
-        bookmark_id = -1
-        # TODO make this nice
-        for bookmark_entry in self._database.execute("SELECT bookmark_id FROM bookmarks WHERE uri = ? AND title = ? AND description = ?", (bookmark.uri, bookmark.title, bookmark.description)):
-            if None is not bookmark_entry:
-                bookmark_id = bookmark_entry[0]
-
-        # Insert new tag entry if it does not already exist
         for tag in bookmark.tags:
             tag_id = get_tag_id_for(tag)
             if None is tag_id:
-                # TODO test this branch
-                cur.execute("INSERT INTO tags (name) VALUES (?)", (tag,))
-                self._database.commit()
-                tag_id = get_tag_id_for(tag)
-            cur.execute("INSERT INTO tagged (bookmark, tag) VALUES (?, ?)", (bookmark_id, tag_id))
+                insert_tag_entry(tag_id, tag)
+            tag_id = get_tag_id_for(tag)
+            insert_tagged_entry(bookmark_id, tag_id)
         self._database.commit()
 
     def close(self):
