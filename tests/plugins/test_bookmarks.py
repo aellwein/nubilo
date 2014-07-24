@@ -23,13 +23,25 @@ class DatabaseTest(TestCase):
 
     def test_database_contains_no_bookmarks_initially(self):
         bookmarks = self._db.get_all_bookmarks()
+
         self.assertTrue(0 == len(bookmarks))
 
-    def test_database_contains_one_bookmark_after_insertion(self):
-        self._db.insert_bookmark(Bookmark("foo", "bar", "baz"))
+    def test_bookmark_insertion_works(self):
+        uri = "uri"
+        title = "title"
+        description = "description"
+        tags = {"tag1", "tag2"}
+        self._db.insert_bookmark(Bookmark(uri, title, description, tags))
         bookmarks = self._db.get_all_bookmarks()
 
         self.assertTrue(1 == len(bookmarks))
+
+        bookmark = bookmarks[0]
+
+        self.assertEquals(uri, bookmark.uri)
+        self.assertEquals(title, bookmark.title)
+        self.assertEquals(description, bookmark.description)
+        self.assertEquals(tags, bookmark.tags)
 
     def tearDown(self):
         self._db.close()

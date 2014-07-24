@@ -24,10 +24,15 @@ class Database():
     def __init__(self, logger, database_file='bookmarks.db', schema_file='schema_sqlite.sql'):
         """
         Constructs a new Database object.
-        :param app: Application instance of Nubilo core.
-        :param database_file: SQLite database file which is the base for this Database object.
-        :param schema_file: The file which contains the DDL statements for creating the tables of the Bookmarks plugin.
-        :return: A new Database object.
+
+        Args:
+            app: Application instance of Nubilo core.
+            database_file: SQLite database file which is the base for
+                this Database object.
+            schema_file: The file which contains the DDL statements for
+                creating the tables of the Bookmarks plugin.
+        Returns:
+            A new Database object.
         """
         self._logger = logger
         self._database_file = database_file
@@ -61,7 +66,10 @@ class Database():
         return result
 
     def _initialise(self):
-        """Initialises the database. This drops all existing data and should be used with care!"""
+        """Initialises the database.
+
+        This drops all existing data and should be used with care!
+        """
         self._logger.debug("Initialising database \"%s\"." % self._database_file)
         ddl_script = open(os.path.abspath(os.path.join("plugins/bookmarks", self._schema_file)))
         self._database.cursor().executescript(ddl_script.read())
@@ -69,19 +77,74 @@ class Database():
         self._database.commit()
 
     def get_all_bookmarks(self):
-        cur = self._database.cursor()
-        cur.execute("SELECT uri, title, description FROM bookmarks")
-        all_bookmarks = cur.fetchall()
-        print(all_bookmarks)
-        for bm in all_bookmarks:
-            # TODO create Bookmark objects based on database data
-            pass
-        return all_bookmarks
+        """Returns a list with all bookmarks in the database.
+
+        Returns:
+            A list with Bookmark objects of all bookmarks which are contained
+            in the database. If the database contains no bookmarks an empty
+            list is returned.
+        """
+        def get_tag_names(bookmark_id):
+            """Delivers the tag names for the given Bookmark ID.
+
+            Args:
+                bookmark_id: The ID of the Bookmark of which to get the tags
+                for.
+
+            Returns:
+                A set containing the found tag names for bookmark_id.
+            """
+            result = set()
+            # TODO This can definitely be optimised
+            for tagged_entry in self._database.execute("SELECT tag FROM tagged WHERE bookmark = ?", (bookmark_id,)):
+                for tag_entry in self._database.execute("SELECT name FROM tags WHERE tag_id = ?", (tagged_entry[0],)):
+                    result.add(tag_entry[0])
+            return result
+
+        result = []
+        for bookmark_entry in self._database.execute("SELECT bookmark_id, uri, title, description FROM bookmarks"):
+            bookmark_id = bookmark_entry[0]
+            bookmark_uri = bookmark_entry[1]
+            bookmark_title = bookmark_entry[2]
+            bookmark_description = bookmark_entry[3]
+            bookmark_tags = get_tag_names(bookmark_id)
+            result.append(Bookmark(bookmark_uri, bookmark_title, bookmark_description, bookmark_tags))
+        return result
 
     def insert_bookmark(self, bookmark):
+        """Inserts the given bookmark into the database.
+
+        Args:
+            bookmark: The Bookmark object to insert into the database.
+        """
+        def get_tag_id_for(tag):
+            result = None
+            cur.execute("SELECT tag_id FROM tags WHERE name = ?", (tag,))
+            tag_id_entry = cur.fetchone()
+            if None is not tag_id_entry:
+                result = tag_id_entry[0]
+            return result
+
         cur = self._database.cursor()
         cur.execute("INSERT INTO bookmarks (uri, title, description) VALUES (?, ?, ?)",
                 (bookmark.uri, bookmark.title, bookmark.description))
+        self._database.commit()
+
+        bookmark_id = -1
+        # TODO make this nice
+        for bookmark_entry in self._database.execute("SELECT bookmark_id FROM bookmarks WHERE uri = ? AND title = ? AND description = ?", (bookmark.uri, bookmark.title, bookmark.description)):
+            if None is not bookmark_entry:
+                bookmark_id = bookmark_entry[0]
+
+        # Insert new tag entry if it does not already exist
+        for tag in bookmark.tags:
+            tag_id = get_tag_id_for(tag)
+            if None is tag_id:
+                # TODO test this branch
+                cur.execute("INSERT INTO tags (name) VALUES (?)", (tag,))
+                self._database.commit()
+                tag_id = get_tag_id_for(tag)
+            cur.execute("INSERT INTO tagged (bookmark, tag) VALUES (?, ?)", (bookmark_id, tag_id))
         self._database.commit()
 
     def close(self):
