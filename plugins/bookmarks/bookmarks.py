@@ -17,7 +17,7 @@
 
 import os
 import sqlite3
-from flask import app, session, abort, Flask
+from tornado.web import authenticated
 
 
 class Database():
@@ -38,6 +38,7 @@ class Database():
         self._database_file = database_file
         self._schema_file = schema_file
         self._database = None
+        self._mydir = os.path.dirname(os.path.abspath(__file__))
 
     def open(self):
         self._connect()
@@ -50,7 +51,7 @@ class Database():
     def _connect(self):
         """Connects to the database."""
         self._logger.debug("Connecting to SQLite database \"%s\"" % self._database_file)
-        self._database = sqlite3.connect(self._database_file)
+        self._database = sqlite3.connect(os.path.join(self._mydir, self._database_file))
         self._database.row_factory = sqlite3.Row
 
     def _is_initialised(self):
@@ -71,7 +72,7 @@ class Database():
         This drops all existing data and should be used with care!
         """
         self._logger.debug("Initialising database \"%s\"." % self._database_file)
-        ddl_script = open(os.path.abspath(os.path.join("plugins/bookmarks", self._schema_file)))
+        ddl_script = open(os.path.join(self._mydir, self._schema_file))
         self._database.cursor().executescript(ddl_script.read())
         ddl_script.close()
         self._database.commit()
@@ -162,6 +163,7 @@ class Database():
     def close(self):
         self._database.close()
 
+
 class Bookmark():
     """
     """
@@ -204,18 +206,17 @@ class BookmarkManager():
         self._database.close()
 
     #@app.route("/")
+    @authenticated
     def get_all_bookmarks(self):
-        if not session.get("logged_in"):
-            abort(401)
         return self._database.get_all_bookmarks()
-
 
 bookmark_manager = None
 
+
 def plugin_load(**kwargs):
     app = kwargs["app"]
-    config = app.config["nubilo_config"]
-    logger = app.config["nubilo_logger"]
+    config = app.settings["nubilo_config"]
+    logger = config.nubilo_logger
 
     global bookmark_manager
     bookmark_manager = BookmarkManager(logger, Database(logger))

@@ -9,12 +9,13 @@ from core.config import Config
 from core.log import Logger
 from plugins.bookmarks.bookmarks import Bookmark, Database
 
+
 class DatabaseTest(TestCase):
     def setUp(self):
         app = MagicMock()
-        app.config = dict(nubilo_logger=Logger(sys.stderr), nubilo_config=Config())
+        app.settings = dict(nubilo_logger=Logger(sys.stderr), nubilo_config=Config())
         # TODO use dedicated test database instead of real one
-        self._db = Database(app.config["nubilo_logger"])
+        self._db = Database(app.settings["nubilo_logger"])
         self._db.open()
         self._db._initialise()
 
@@ -45,6 +46,7 @@ class DatabaseTest(TestCase):
 
     def tearDown(self):
         self._db.close()
+
 
 def suite():
     result = TestSuite()
