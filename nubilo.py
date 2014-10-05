@@ -16,13 +16,14 @@
 # limitations under the License.
 
 import sys
+import os
 
-from flask.app import Flask
-from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from tornado.wsgi import WSGIContainer
+from tornado.locale import load_translations
+from tornado.web import Application
 
 from core.config import Config
+from core.handlers import LoginHandler, FallbackNoOpHandler, IndexHandler
 from core.log import Logger
 from core.plugin import PluginManager
 
@@ -35,8 +36,8 @@ class NubiloCore():
 
     def __init__(self, _app):
         self.app = _app
-        self.config = self.app.config["nubilo_config"]
-        self.logger = self.app.config["nubilo_logger"]
+        self.config = _app.settings["nubilo_config"]
+        self.logger = self.config.nubilo_logger
 
     def start(self):
         self.plugin_manager = PluginManager(app)
@@ -45,22 +46,44 @@ class NubiloCore():
 
 if __name__ == "__main__":
 
-    app = Flask(__name__)
+    # calculate application's absolute path
+    app_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # global settings
+    settings = dict(
+        login_url="/login",
+        cookie_secret=os.urandom(20),
+        # TODO: enable later
+        # xsrf_cookies=True,
+        debug=False,
+        static_path=os.path.join(app_dir, "static"),
+        template_path=os.path.join(app_dir, "templates")
+    )
+    # setting debug mode if appropriate (affects autoreload and responses)
     if "--debug" in sys.argv:
-        app.config["DEBUG"] = True
+        settings["debug"] = True
 
     config = Config()
-    app.config["nubilo_config"] = config
+    settings["nubilo_config"] = config
 
-    logger = Logger(config.nubilo_logfile, config.nubilo_colored_log, app.config["DEBUG"])
-    app.config["nubilo_logger"] = logger
+    logger = Logger(config.nubilo_logfile, config.nubilo_colored_log, settings["debug"])
+    config.nubilo_logger = logger
+
+    # load translations
+    load_translations(os.path.join(app_dir, "translations"))
+
+    # bind some default handlers
+    _handlers = [(r"/login", LoginHandler),
+                 (r"/", IndexHandler),
+                 (r".*$", FallbackNoOpHandler)]
+
+    # create application
+    app = Application(_handlers, **settings)
 
     try:
         nubilo_core = NubiloCore(app)
         nubilo_core.start()
-
-        http_server = HTTPServer(WSGIContainer(app))
-        http_server.listen(config.nubilo_listen_port)
+        app.listen(config.nubilo_listen_port)
         IOLoop.instance().start()
 
     except KeyboardInterrupt:
