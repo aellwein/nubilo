@@ -166,8 +166,8 @@ class PluginManager(object):
         :param app: app instance which will be passed to loaded plugins
         """
         self.app = app
-        self.config = self.app.config["nubilo_config"]
-        self.logger = self.app.config["nubilo_logger"]
+        self.config = self.app.settings["nubilo_config"]
+        self.logger = self.config.nubilo_logger
         self.plugins = dict()
         self.plugin_dir_content = list()
         self.install_dir = os.path.abspath(os.path.join(os.path.os.getcwd(), os.path.dirname(__file__), ".."))
