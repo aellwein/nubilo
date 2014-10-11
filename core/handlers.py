@@ -25,6 +25,7 @@ class BaseHandler(RequestHandler):
 
     def initialize(self):
         self._database = self.application.settings["nubilo_config"].database
+        self._config = self.application.settings["nubilo_config"]
 
     def set_default_headers(self):
         self.set_header("Server", "SomeServer")
@@ -64,5 +65,5 @@ class LoginHandler(BaseHandler):
             if row is None:
                 self.send_error(403)
                 return  # thou shalt not pass :)
-            self.set_secure_cookie("nubilo_user", row["username"])
+            self.set_secure_cookie("nubilo_user", row["username"], int(self._config.nubilo_cookie_expires))
         self.redirect(self.get_argument("next", "/"))
