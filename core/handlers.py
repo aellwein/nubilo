@@ -15,12 +15,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import hashlib
+
 from tornado.web import RequestHandler, authenticated
 
 
 class BaseHandler(RequestHandler):
+    _database = None
+
+    def initialize(self):
+        self._database = self.application.settings["nubilo_config"].database
+
     def set_default_headers(self):
         self.set_header("Server", "SomeServer")
+
+    def get_current_user(self):
+        return self.get_secure_cookie("nubilo_user")
 
 
 class FallbackNoOpHandler(BaseHandler):
@@ -38,3 +48,21 @@ class IndexHandler(BaseHandler):
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render("login.template")
+
+    def post(self, *args, **kwargs):
+
+        _username = self.get_argument("username")
+        _password = self.get_argument("password")
+
+        if _username == "" or _password == "":
+            self.send_error(403)
+        _password = hashlib.sha512(bytes(_password, "utf-8")).hexdigest()
+
+        with self._database:
+            row = self._database.execute("SELECT * FROM users WHERE username=? and password=?",
+                                         (_username, _password)).fetchone()
+            if row is None:
+                self.send_error(403)
+                return  # thou shalt not pass :)
+            self.set_secure_cookie("nubilo_user", row["username"])
+        self.redirect(self.get_argument("next", "/"))
