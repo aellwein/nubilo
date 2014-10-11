@@ -14,6 +14,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 from sqlite3 import Row
 
 import sys
@@ -27,6 +28,7 @@ from tornado.web import Application
 from core.config import Config
 from core.handlers import LoginHandler, FallbackNoOpHandler, IndexHandler
 from core.log import Logger
+from core.menu import Menu
 from core.plugin import PluginManager
 
 
@@ -75,6 +77,12 @@ if __name__ == "__main__":
     # set and connect database
     config.database = sqlite3.connect(os.path.join(app_dir, "data", "nubilo.db"))
     config.database.row_factory = Row
+
+    # menu for the registered apps
+    config.menu = Menu()
+
+    # placeholder for plugins
+    config.plugins = {}
 
     # load translations
     load_translations(os.path.join(app_dir, "translations"))
