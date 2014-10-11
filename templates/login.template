@@ -1,3 +1,3 @@
 {% extends "base.template" %}
 {% block title %}{{ _("login") }}{% end %}
-{% block container %}Blahhh{% end %}
+
