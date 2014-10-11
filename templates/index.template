@@ -1,3 +1,3 @@
-{% extends "base.html" %}
-{% block title %{{ Nubilo - _("welcome") }}{% end %}
-{% block body %}This is the index page (work in progress).{% end %}
+{% extends "base.template" %}
+{% block title %}{{ Nubilo - _("welcome") }}{% end %}
+{% block container %}This is the index page (work in progress).{% end %}

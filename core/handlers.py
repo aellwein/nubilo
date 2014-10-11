@@ -26,16 +26,15 @@ class BaseHandler(RequestHandler):
 class FallbackNoOpHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.set_status(404, "Not Found")
-        # TODO: render some nice 404 page here
-        self.write("404 Not Found")
+        self.render("404.template")
 
 
 class IndexHandler(BaseHandler):
     @authenticated
     def get(self, *args, **kwargs):
-        self.render("index.html")
+        self.render("index.template")
 
 
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        self.render("login.html")
+        self.render("login.template")
