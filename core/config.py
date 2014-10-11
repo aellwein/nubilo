@@ -30,6 +30,7 @@ class Config(object):
                   nubilo_plugin_directory="plugins",
                   nubilo_plugin_poll_interval=5,
                   nubilo_logfile="/var/log/nubilo.log",
+                  nubilo_cookie_expires=1,
                   nubilo_colored_log=False)
 
     def __init__(self):
