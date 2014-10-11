@@ -67,7 +67,7 @@
     </div>
 {% end %}
 {% block footer %}
-      <div class="bottom">
+      <div class="navbar-fixed-bottom">
         <footer>
         <p class="text-center">Copyright &copy; 2014 <a href="https://bitbucket.org/jufickel/nubilo">Nubilo</a></p>
       </footer>
