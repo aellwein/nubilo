@@ -22,6 +22,7 @@ from tornado.web import RequestHandler, authenticated
 
 class BaseHandler(RequestHandler):
     _database = None
+    _config = None
 
     def initialize(self):
         self._database = self.application.settings["nubilo_config"].database
