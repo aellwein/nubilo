@@ -14,9 +14,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from sqlite3 import Row
 
 import sys
 import os
+import sqlite3
 
 from tornado.ioloop import IOLoop
 from tornado.locale import load_translations
@@ -54,7 +56,7 @@ if __name__ == "__main__":
         login_url="/login",
         cookie_secret=os.urandom(20),
         # TODO: enable later
-        # xsrf_cookies=True,
+        xsrf_cookies=True,
         debug=False,
         static_path=os.path.join(app_dir, "static"),
         template_path=os.path.join(app_dir, "templates")
@@ -66,8 +68,13 @@ if __name__ == "__main__":
     config = Config()
     settings["nubilo_config"] = config
 
+    # set logger
     logger = Logger(config.nubilo_logfile, config.nubilo_colored_log, settings["debug"])
     config.nubilo_logger = logger
+
+    # set and connect database
+    config.database = sqlite3.connect(os.path.join(app_dir, "data", "nubilo.db"))
+    config.database.row_factory = Row
 
     # load translations
     load_translations(os.path.join(app_dir, "translations"))
