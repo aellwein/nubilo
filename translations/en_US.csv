@@ -3,3 +3,10 @@
 "username","username"
 "password","password"
 "email","email"
+"notfound","Page not found"
+"notfound2","Sorry, but the page you were trying to view does not exist."
+"notfound3","It looks like this was the result of either:"
+"notfound4","a mistyped address"
+"notfound5","an out-of-date link"
+
+

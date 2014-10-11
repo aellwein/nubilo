@@ -3,3 +3,8 @@
 "username","Benutzername"
 "password","Paßwort"
 "email","Email"
+"notfound","Seite nicht gefunden"
+"notfound2","Entschuldigen Sie, die gewünschte Seite wurde nicht gefunden."
+"notfound3","Das könnte mehrere Ursachen haben:"
+"notfound4","der Link enthält Schreibfehler"
+"notfound5","der Link ist veraltet"
