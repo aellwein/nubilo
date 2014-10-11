@@ -59,3 +59,13 @@ class Menu(object):
         else:
             m = [(label, menu)]
             self._menu[appname] = m
+
+    def delete_app(self, appname):
+        """
+        Deletes an app from the menu, usually called on unregistering.
+        :param appname: app name
+        """
+        if appname is None or type(appname) != str or appname.strip() == "":
+            raise BaseException("appname should be provided and not empty.")
+        if appname in self._menu:
+            del self._menu[appname]
