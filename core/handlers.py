@@ -23,10 +23,12 @@ from tornado.web import RequestHandler, authenticated
 class BaseHandler(RequestHandler):
     _database = None
     _config = None
+    _logger = None
 
     def initialize(self):
         self._database = self.application.settings["nubilo_config"].database
         self._config = self.application.settings["nubilo_config"]
+        self._logger = self._config.nubilo_logger
 
     def set_default_headers(self):
         self.set_header("Server", "SomeServer")
