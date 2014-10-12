@@ -18,41 +18,33 @@
 import os
 import sqlite3
 from tornado.web import authenticated
+from core.handlers import BaseHandler
 
 
 class Database():
-    def __init__(self, logger, database_file='bookmarks.db', schema_file='schema_sqlite.sql'):
+    def __init__(self, logger, database, schema_file='schema_sqlite.sql'):
         """
         Constructs a new Database object.
 
         Args:
             app: Application instance of Nubilo core.
-            database_file: SQLite database file which is the base for
-                this Database object.
+            database: SQLite database connection.
             schema_file: The file which contains the DDL statements for
                 creating the tables of the Bookmarks plugin.
         Returns:
             A new Database object.
         """
         self._logger = logger
-        self._database_file = database_file
+        self._database = database
         self._schema_file = schema_file
-        self._database = None
         self._mydir = os.path.dirname(os.path.abspath(__file__))
 
     def open(self):
-        self._connect()
         self._initialise_if_necessary()
 
     def _initialise_if_necessary(self):
         if not self._is_initialised():
             self._initialise()
-
-    def _connect(self):
-        """Connects to the database."""
-        self._logger.debug("Connecting to SQLite database \"%s\"" % self._database_file)
-        self._database = sqlite3.connect(os.path.join(self._mydir, self._database_file))
-        self._database.row_factory = sqlite3.Row
 
     def _is_initialised(self):
         """Indicates whether the database is already initialised or not."""
@@ -60,7 +52,7 @@ class Database():
         if None is self._database:
             result = False
         else:
-            cur = self._database.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            cur = self._database.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='bookmarks';")
             number_tables = len(cur.fetchall())
             result = 0 < number_tables
         self._logger.debug("Is database already initialised? %s" % result)
@@ -71,7 +63,7 @@ class Database():
 
         This drops all existing data and should be used with care!
         """
-        self._logger.debug("Initialising database \"%s\"." % self._database_file)
+        self._logger.debug("Initialising database")
         ddl_script = open(os.path.join(self._mydir, self._schema_file))
         self._database.cursor().executescript(ddl_script.read())
         ddl_script.close()
@@ -160,9 +152,6 @@ class Database():
             insert_tagged_entry(bookmark_id, tag_id)
         self._database.commit()
 
-    def close(self):
-        self._database.close()
-
 
 class Bookmark():
     """
@@ -194,34 +183,38 @@ class Bookmark():
         return self._tags
 
 
-class BookmarkManager():
-    def __init__(self, logger, database):
-        self._logger = logger
-        self._database = database
+class BookmarkManager(BaseHandler):
+    _db = None
 
-    def start(self):
-        self._database.open()
+    def initialize(self):
+        super().initialize()
+        self._db = Database(self._logger, self._config.database)
+        self._db.open()
+        self._config.plugins["bookmark_manager"] = self
 
-    def stop(self):
-        self._database.close()
-
-    #@app.route("/")
     @authenticated
-    def get_all_bookmarks(self):
-        return self._database.get_all_bookmarks()
-
-bookmark_manager = None
+    def get(self, *args, **kwargs):
+        for i in self._db.get_all_bookmarks():
+            self.write(i, "\n")
 
 
 def plugin_load(**kwargs):
     app = kwargs["app"]
     config = app.settings["nubilo_config"]
-    logger = config.nubilo_logger
 
-    global bookmark_manager
-    bookmark_manager = BookmarkManager(logger, Database(logger))
-    bookmark_manager.start()
+    # add request handler to app so that the plugin is routed
+    app.add_handlers(r".*$", [(r"/bookmarks(.*)$", BookmarkManager)])
+
+    # add a menu to the UI
+    config.menu.add_item("bookmarks", "Get bookmarks", "/bookmarks")
 
 
 def plugin_unload(**kwargs):
-    bookmark_manager.stop()
+    app = kwargs["app"]
+    config = app.settings["nubilo_config"]
+
+    # remove the menu entries
+    config.menu.delete_app("bookmarks")
+
+    # remove the plugin
+    del config.plugins["bookmark_manager"]
