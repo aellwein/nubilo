@@ -13,6 +13,7 @@
     <div class="row">
         <form role="form" action="/login" method="post">
             {% module xsrf_form_html() %}
+            <input type="hidden" name="next" value="{{ next }}"/>
             <div class="row">
                 <div class="col-md-offset-5 col-md-2 login-panel">
                     <input type="text" id="username" name="username" placeholder="{{ _("username") }}" class="form-control">

@@ -51,7 +51,7 @@ class IndexHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        self.render("login.template")
+        self.render("login.template", next=self.get_argument("next", "/"))
 
     def post(self, *args, **kwargs):
 
