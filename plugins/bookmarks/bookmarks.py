@@ -195,7 +195,7 @@ class BookmarkManager(BaseHandler):
     @authenticated
     def get(self, *args, **kwargs):
         for i in self._db.get_all_bookmarks():
-            self.write(i, "\n")
+            self.write("%s\n" % i)
 
 
 def plugin_load(**kwargs):
