@@ -17,29 +17,41 @@
 
 import os
 import sqlite3
+
 from tornado.web import authenticated
+
 from core.handlers import BaseHandler
 
 
 class Database():
-    def __init__(self, logger, database, schema_file='schema_sqlite.sql'):
+
+    def __init__(self, logger, database_file='bookmarks.db', schema_file='schema_sqlite.sql'):
         """
         Constructs a new Database object.
 
         Args:
             app: Application instance of Nubilo core.
-            database: SQLite database connection.
+            database_file: database_file: SQLite database file which is the base for
+                this Database object.
             schema_file: The file which contains the DDL statements for
                 creating the tables of the Bookmarks plugin.
         Returns:
             A new Database object.
         """
         self._logger = logger
-        self._database = database
-        self._schema_file = schema_file
         self._mydir = os.path.dirname(os.path.abspath(__file__))
+        self._database_file = database_file
+        self._database = None
+        self._schema_file = schema_file
+
+    def _connect(self):
+        """Connects to the database."""
+        self._logger.debug("Connectiong to the SQLite database \"%s\"" % self._database_file)
+        self._database = sqlite3.connect(os.path.join(self._mydir, self._database_file))
+        self._database.row_factory = sqlite3.Row
 
     def open(self):
+        self._connect()
         self._initialise_if_necessary()
 
     def _initialise_if_necessary(self):
@@ -52,7 +64,7 @@ class Database():
         if None is self._database:
             result = False
         else:
-            cur = self._database.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='bookmarks';")
+            cur = self._database.execute("SELECT name FROM sqlite_master WHERE type='table';")
             number_tables = len(cur.fetchall())
             result = 0 < number_tables
         self._logger.debug("Is database already initialised? %s" % result)
@@ -60,10 +72,9 @@ class Database():
 
     def _initialise(self):
         """Initialises the database.
-
         This drops all existing data and should be used with care!
         """
-        self._logger.debug("Initialising database")
+        self._logger.debug("Initialising database \"%s\"." % self._database_file)
         ddl_script = open(os.path.join(self._mydir, self._schema_file))
         self._database.cursor().executescript(ddl_script.read())
         ddl_script.close()
@@ -77,6 +88,7 @@ class Database():
             in the database. If the database contains no bookmarks an empty
             list is returned.
         """
+
         def get_tag_names(bookmark_id):
             """Delivers the tag names for the given Bookmark ID.
 
@@ -91,7 +103,7 @@ class Database():
             # TODO This can definitely be optimised
             for tagged_entry in self._database.execute("SELECT tag FROM tagged WHERE bookmark = ?", (bookmark_id,)):
                 for tag_entry in self._database.execute("SELECT name FROM tags WHERE tag_id = ?",
-                        (tagged_entry["tag"],)):
+                                                        (tagged_entry["tag"],)):
                     result.add(tag_entry["name"])
             return result
 
@@ -111,16 +123,17 @@ class Database():
         Args:
             bookmark: The Bookmark object to insert into the database.
         """
+
         def insert_bookmark_entry():
             cur.execute("INSERT INTO bookmarks (uri, title, description) VALUES (?, ?, ?)",
-                    (bookmark.uri, bookmark.title, bookmark.description))
+                        (bookmark.uri, bookmark.title, bookmark.description))
             self._database.commit()
 
         def get_bookmark_id():
             result = -1
             for bookmark_entry in self._database.execute(("SELECT bookmark_id FROM bookmarks "
-                    "WHERE uri = ? AND title = ? AND description = ?"),
-                    (bookmark.uri, bookmark.title, bookmark.description)):
+                                                          "WHERE uri = ? AND title = ? AND description = ?"),
+                                                         (bookmark.uri, bookmark.title, bookmark.description)):
                 if None is not bookmark_entry:
                     result = bookmark_entry["bookmark_id"]
             return result
@@ -152,10 +165,14 @@ class Database():
             insert_tagged_entry(bookmark_id, tag_id)
         self._database.commit()
 
+    def close(self):
+        self._database.close()
+
 
 class Bookmark():
     """
     """
+
     def __init__(self, uri="", title="", description="", tags=set()):
         self._uri = uri
         self._title = title
@@ -188,7 +205,7 @@ class BookmarkManager(BaseHandler):
 
     def initialize(self):
         super().initialize()
-        self._db = Database(self._logger, self._config.database)
+        self._db = Database(self._logger)
         self._db.open()
         self._config.plugins["bookmark_manager"] = self
 
