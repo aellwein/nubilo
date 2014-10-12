@@ -1,16 +1,19 @@
-CREATE TABLE IF NOT EXISTS tags (
+DROP TABLE IF EXISTS tags;
+CREATE TABLE tags (
     tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS bookmarks (
+DROP TABLE IF EXISTS bookmarks;
+CREATE TABLE bookmarks (
     bookmark_id INTEGER PRIMARY KEY AUTOINCREMENT,
     uri TEXT NOT NULL,
     title TEXT,
     description TEXT
 );
 
-CREATE TABLE IF NOT EXISTS tagged (
+DROP TABLE IF EXISTS tagged;
+CREATE TABLE tagged (
     tagged_id INTEGER PRIMARY KEY AUTOINCREMENT,
     bookmark INTEGER,
     tag INTEGER,
