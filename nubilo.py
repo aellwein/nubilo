@@ -57,7 +57,6 @@ if __name__ == "__main__":
     settings = dict(
         login_url="/login",
         cookie_secret=os.urandom(20),
-        # TODO: enable later
         xsrf_cookies=True,
         debug=False,
         static_path=os.path.join(app_dir, "static"),
