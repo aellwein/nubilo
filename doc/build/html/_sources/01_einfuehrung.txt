@@ -1,0 +1,44 @@
+
+Einführung und Ziele
+====================
+
+*Nubilo* ist der aktuelle Arbeitsname für ein Projekt, das zum Ziel hat, ein Cloud-Ökosystem für leistungsschwache
+Hardware zu bieten. Vorlage dafür ist `OwnCloud`_.
+
+.. _OwnCloud: http://owncloud.org/
+
+.. note::
+   `OwnCloud`_ ist eine einfache und etablierte Lösung für eine eigene Cloud-Computing-Infrastruktur.
+   Für den Betrieb eines eigenen Webservers eignet sich auf der Hardwareseite z. B. ein
+   `Raspberry Pi <http://www.raspberrypi.org/>`_.
+   Vor allem das B-Modell ist mit ausreichend Rechen- und Speicherkapazität ausgestattet und der Stromverbrauch ist
+   gering genug, um kein schlechtes Gewissen zu bekommen. OwnCloud ist in PHP geschrieben und kann auf einem Raspberry
+   betrieben werden. Allerdings ist das Leistungsverhalten mäßig und die Prozessorauslastung hoch. Dies liegt daran, daß
+   PHP-Code zur Laufzeit interpretiert wird – und zwar bei jedem Aufruf neu. Caches wie
+   `opcache <http://www.php.net/manual/de/book.opcache.php>`_ oder `APCu <http://pecl.php.net/package/APCu>`_ verbessern
+   die Leistung zwar, jedoch nicht in ausreichendem Maße.
+
+*Nubilo* ist bestrebt, eine leichtgewichtige Alternative zu OwnCloud zu bieten, um vor allem auf schwacher Hardware
+eine gute Leistung zu bringen.
+
+Dies soll dadurch geschehen, daß ausschließlich das Backend auf dem Server läuft und die graphische Benutzeroberfläche(n)
+auf der Client-Seite verarbeitet werden.
+
+Die Ziele können in folgenden Stichpunkten zusammengefaßt werden:
+
+* Einfachheit
+    * In der Benutzung.
+    * Bei der Einrichtung und im Betrieb.
+* Gutes Leistungsverhalten
+    * Geringe Prozessorlast.
+    * Geringer Arbeitsspeicherverbrauch.
+    * Kurze Reaktionszeiten.
+* Erweiterbarkeit.
+
+Desweiteren hat das Projekt folgende nicht-funktionale Ziele:
+* Sicherheit.
+* Eine offene, liberale Softwarelizenz (:doc:`Apache 2 Lizenz <13_lizenz>`)
+
+Die Infrastruktur einer Nubilo-Umgebung soll in etwa wie folgt aussehen:
+
+.. image:: images/Aufbau.svg

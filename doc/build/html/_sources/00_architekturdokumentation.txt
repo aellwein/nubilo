@@ -1,0 +1,16 @@
+
+Architekturdokumentation
+========================
+
+* :doc:`01_einfuehrung`
+* :doc:`02_randbedingungen`
+* :doc:`03_kontextabgrenzung`
+* :doc:`04_loesungsstrategie`
+* :doc:`05_bausteinsicht`
+* :doc:`06_laufzeitsicht`
+* :doc:`07_verteilungssicht`
+* :doc:`08_konzepte`
+* :doc:`09_entwurfsentscheidungen`
+* :doc:`10_qualitaetsszenarien`
+* :doc:`11_risiken`
+* :doc:`12_glossar`
