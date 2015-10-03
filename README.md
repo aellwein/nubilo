@@ -15,7 +15,7 @@ Nubilo aims to be a private cloud which can host services (a.k.a. apps).
 
 ### Installation
 
-* Install [Python 3.4+](https://python.org/downloads)
+* Install [Python 3.4](https://python.org/downloads) or greater
 * for installing **an official release**:
     * run ``python3 -m ensurepip`` (maybe using priviledged user)
     * run ``pip install nubilo --user``
