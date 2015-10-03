@@ -1,3 +1,5 @@
 .idea/
 *.db
+nubilo.egg-info/
+.cache/
 __pycache__/
