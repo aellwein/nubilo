@@ -27,7 +27,8 @@
 
 ### Documentation
 
-* please refer to the docs under doc/build/html.
+* Please refer to the docs under doc/build/html.
+* To build the docs: ``pip install Sphinx`` and ``make html`` in ``doc`` directory.
 
 ### License
 
