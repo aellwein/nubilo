@@ -15,15 +15,8 @@
 
 ### Installation
 
-* Install [Python 3.4](https://python.org/downloads) or greater.
-* For installing **an official release** of *Nubilo*:
-    * run ``python3 -m ensurepip`` (maybe using priviledged user)
-    * run ``pip install nubilo`` (system-wide) or
-    * ``pip install nubilo --user`` (user-local installation).
-* for installing **a development version** of *Nubilo*:
-    * run ``python3 -m ensurepip`` (maybe using priviledged user)
-    * run ``pip install git+https://bitbucket.org/jufickel/nubilo`` (system-wide) or
-    * ``pip install git+https://bitbucket.org/jufickel/nubilo --user`` for user-local installation.
+* Install [luajit 2.0.4](http://luajit.org/download.html).
+* Install [turbo.lua](https://turbo.readthedocs.org/)
 
 ### Documentation
 
