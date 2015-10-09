@@ -13,10 +13,10 @@
 * lightweight and minimalistic
 * ...but extendable
 
-### Installation
+### Example Installation on a Raspberry PI (running Raspbian):
 
-* Install [luajit 2.0.4](http://luajit.org/download.html).
-* Install [turbo.lua](https://turbo.readthedocs.org/)
+* ``sudo apt-get install luarocks luajit libssl-dev``
+* ``sudo luarocks install turbo``
 
 ### Documentation
 
