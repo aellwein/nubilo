@@ -29,6 +29,6 @@ Documentation
 License
 -------
 
-*Nubilo* is licensed under the terms of [Apache 2 Software License](http://www.apache.org/licenses/LICENSE-2.0). 
+*Nubilo* is licensed under the terms of [MIT License](http://opensource.org/licenses/MIT). 
  
  
