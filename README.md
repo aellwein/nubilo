@@ -7,14 +7,6 @@ What is it?
 *Nubilo* aims to be a private cloud which can host services (a.k.a. apps). 
 
 
-Core principles
----------------
-
-* cross-platform software
-* has a liberal license
-* lightweight and minimalistic
-* ...but extendable
-
 Example Installation on a Raspberry PI (running Raspbian):
 ----------------------------------------------------------
 

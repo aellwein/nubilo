@@ -1,40 +1,28 @@
 .. title:: Nubilo
 
+.. warning::
+   **Beware**: this is a development version of the documentation. 
+   Some documentation aspects may be not correct or even missing.
 
-Benutzerdokumentation
----------------------
+User Guide
+----------
 .. toctree::
    :titlesonly:
 
-   installation
-   lizenz
+   userguide/index
 
-
-Architekturdokumentation
-------------------------
+Developer Guide
+---------------
 .. toctree::
    :titlesonly:
 
-   arc42/01_einfuehrung
-   arc42/02_randbedingungen
-   arc42/03_kontextabgrenzung
-   arc42/04_loesungsstrategie
-   arc42/05_bausteinsicht
-   arc42/06_laufzeitsicht
-   arc42/07_verteilungssicht
-   arc42/08_konzepte
-   arc42/09_entwurfsentscheidungen
-   arc42/10_qualitaetsszenarien
-   arc42/11_risiken
-   arc42/12_glossar
+   devguide/index
 
-Anhänge
--------
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
 
-Diskussion und Support
+Discussion and Support
 ----------------------
 * `Bitbucket Issue Tracker <https://bitbucket.org/jufickel/nubilo/issues>`_
 * `Bitbucket Wiki <https://bitbucket.org/jufickel/nubilo/wiki/Home>`_

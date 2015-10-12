@@ -1,3 +1,0 @@
-
-Lösungsstrategie
-================

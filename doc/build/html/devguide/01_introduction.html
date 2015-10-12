@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction and Goals &mdash; nubilo 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="nubilo 0.0.1 documentation" href="../index.html"/>
+        <link rel="up" title="Developer Guide" href="index.html"/>
+        <link rel="next" title="Constraints" href="02_constraints.html"/>
+        <link rel="prev" title="Developer Guide" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> nubilo
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1+git
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../userguide/index.html">User Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Introduction and Goals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_constraints.html">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_context.html">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_solution_strategy.html">Solution Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05_building_blocks.html">Building Block View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06_runtime.html">Runtime View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_deployment.html">Deployment View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08_concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09_design_decisions.html">Design Decisions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_quality_scenarios.html">Quality Scenarios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_technical_risks.html">Technical Risks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_glossary.html">Glossary</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">nubilo</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Developer Guide</a> &raquo;</li>
+      
+    <li>Introduction and Goals</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/devguide/01_introduction.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction-and-goals">
+<h1>Introduction and Goals<a class="headerlink" href="#introduction-and-goals" title="Permalink to this headline">¶</a></h1>
+<p><em>Nubilo</em> is the current working name for the project, which aims to create a private cloud
+infrastructure for a small sized hardware, like Raspberry Pi or BeagleBone SBCs. We want to provide
+approximately the same feature set as <a class="reference external" href="http://owncloud.org/">OwnCloud</a> does.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><a class="reference external" href="http://owncloud.org/">OwnCloud</a> is a simple and established solution for creating own private cloud infrastructure.
+An OwnCloud server instance can be operated by a <a class="reference external" href="http://www.raspberrypi.org/">Raspberry Pi</a>.
+Especially since the Model B Raspberry has enough RAM and CPU to operate it. However, OwnCloud
+running on a Raspberry behaves slow and a RAM consumption is high, because
+OwnCloud is written in PHP and the code gets interpreted at runtime - every time. Caches like
+<a class="reference external" href="http://www.php.net/manual/de/book.opcache.php">opcache</a> or <a class="reference external" href="http://pecl.php.net/package/APCu">APCu</a>
+can improve the performance, but not satisfactory enough.</p>
+</div>
+<p>Nubilo tries to provide a lightweight alternative for OwnCloud and decent performance even
+on a weak hardware. This can be done by doing the only necessary work - preparation and processing of data -
+on the (resource-limited) server; the user interface can be handled completely on the client&#8217;s side.</p>
+<p>Here are the important project goals:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>Simplicity</dt>
+<dd><ul class="first last simple">
+<li>simple usage</li>
+<li>simple setup and operation</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Performance</dt>
+<dd><ul class="first last simple">
+<li>low CPU usage</li>
+<li>low RAM usage</li>
+<li>short response times</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Modularity</dt>
+<dd><ul class="first last simple">
+<li>can be extended by plugins</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Furthermore, there are some non-functional goals:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>Security</dt>
+<dd><ul class="first last simple">
+<li>use modern encryption</li>
+<li>provide high security already out-of-the-box</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">An open and liberal software license (<a class="reference internal" href="../userguide/license.html"><em>MIT License</em></a>).</p>
+</li>
+</ul>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="02_constraints.html" class="btn btn-neutral float-right" title="Constraints" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Developer Guide" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015 Alexander Ellwein, Jürgen Fickel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
