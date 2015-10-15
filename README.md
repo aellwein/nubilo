@@ -16,7 +16,14 @@ Example Installation on a Raspberry PI (running Raspbian):
 Documentation
 -------------
 
-* See [here](doc/build/html/index.html)
+* Generated HTML docs can be found here: ./doc/build/html/index.html
+
+
+Contributing
+------------
+* Please follow the guidelines for good Git commit messages as described
+  [here](http://chris.beams.io/posts/git-commit/).
+
 
 License
 -------
