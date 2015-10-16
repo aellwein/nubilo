@@ -12,6 +12,9 @@ Example Installation on a Raspberry PI (running Raspbian):
 
 * ``sudo apt-get install luarocks luajit libssl-dev``
 * ``sudo luarocks install turbo``
+* clone this repo and run:
+  * ``make``
+  * ``sudo make install``
 
 Documentation
 -------------
