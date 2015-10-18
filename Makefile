@@ -3,7 +3,7 @@
 all: test
 
 test:
-	busted
+	@busted
 
 doc:
 	$(MAKE) -C doc html
