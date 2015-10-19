@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/aellwein/nubilo.png?label=ready&title=Ready)](https://waffle.io/aellwein/nubilo)
 [![Build Status](https://travis-ci.org/aellwein/nubilo.svg?branch=master)](https://travis-ci.org/aellwein/nubilo) [![Coverage Status](https://coveralls.io/repos/aellwein/nubilo/badge.svg?branch=master&service=github)](https://coveralls.io/github/aellwein/nubilo?branch=master) [![Licence](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE)
 
 
