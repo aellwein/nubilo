@@ -1,3 +1,4 @@
+sudo: false
 language: erlang
 
 env:
@@ -7,13 +8,15 @@ branches:
   only:
     - master
 
+addons:
+    apt:
+        packages:
+            - luajit
+            - luarocks
 install:
-  - sudo apt-get install luajit
-  - sudo apt-get install luarocks
-  - sudo luarocks install luafilesystem
-  - sudo luarocks install busted
+    - luarocks install --local busted
 
-script: "busted spec"
+script: "busted"
 
 notifications:
   webhooks:
