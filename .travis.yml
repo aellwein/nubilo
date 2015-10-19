@@ -16,7 +16,7 @@ addons:
 install:
     - luarocks install --local busted
 
-script: "busted"
+script: "/home/travis/.luarocks/bin/busted"
 
 notifications:
   webhooks:
