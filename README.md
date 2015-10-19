@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/aellwein/nubilo.svg?branch=master)](https://travis-ci.org/aellwein/nubilo) [![Coverage Status](https://coveralls.io/repos/aellwein/nubilo/badge.svg?branch=master&service=github)](https://coveralls.io/github/aellwein/nubilo?branch=master) [![Licence](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE)
+[![Build Status](https://travis-ci.org/aellwein/nubilo.svg?branch=master)](https://travis-ci.org/aellwein/nubilo) [![Coverage Status](https://coveralls.io/repos/aellwein/nubilo/badge.svg?branch=master&service=github)](https://coveralls.io/github/aellwein/nubilo?branch=master) [![Stories in Ready](https://badge.waffle.io/aellwein/nubilo.png?label=ready&title=Ready)](https://waffle.io/aellwein/nubilo) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/aellwein/nubilo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Licence](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE)
 
 
 Nubilo
