@@ -1,0 +1,25 @@
+language: erlang
+
+env:
+  - LUA="luajit"
+
+branches:
+  only:
+    - master
+
+install:
+  - sudo apt-get install luajit
+  - sudo apt-get install luarocks
+  - sudo luarocks install luafilesystem
+  - sudo luarocks install busted
+
+script: "busted spec"
+
+notifications:
+#  webhooks:
+#    - http://my-url/travis-results
+  recipients:
+    - alex.ellwein@gmail.com
+  email:
+    on_success: change
+    on_failure: always
