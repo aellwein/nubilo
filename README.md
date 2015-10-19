@@ -1,3 +1,6 @@
+[![Build
+Status](https://travis-ci.org/aellwein/nubilo.svg?branch=master)](https://travis-ci.org/aellwein/nubilo)
+
 Nubilo
 ======
 
