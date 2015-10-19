@@ -16,8 +16,8 @@ install:
 script: "busted spec"
 
 notifications:
-#  webhooks:
-#    - http://my-url/travis-results
+  webhooks:
+    - https://webhooks.gitter.im/e/02362d51814b387a7783
   recipients:
     - alex.ellwein@gmail.com
   email:
