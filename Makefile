@@ -1,9 +1,14 @@
+BUSTED ?= busted
+
 .PHONY: doc
 
 all: test
 
 test:
-	@busted
+	@$(BUSTED)
+
+coverage:
+	@$(BUSTED) -c
 
 doc:
 	$(MAKE) -C doc html

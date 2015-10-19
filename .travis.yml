@@ -15,8 +15,12 @@ addons:
             - luarocks
 install:
     - luarocks install --local busted
+    - luarocks install --local luacov-coveralls
 
-script: "/home/travis/.luarocks/bin/busted"
+script: "env BUSTED=/home/travis/.luarocks/bin/busted make coverage"
+
+after_success:
+    - /home/travis/.luarocks/bin/luacov-coveralls
 
 notifications:
   webhooks:
