@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/aellwein/nubilo.svg?branch=master)](https://travis-ci.org/aellwein/nubilo) [![Licence](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE)
+[![Build Status](https://travis-ci.org/aellwein/nubilo.svg?branch=master)](https://travis-ci.org/aellwein/nubilo) [![Coverage Status](https://coveralls.io/repos/aellwein/nubilo/badge.svg?branch=master&service=github)](https://coveralls.io/github/aellwein/nubilo?branch=master) [![Licence](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE)
+
 
 Nubilo
 ======
@@ -46,6 +47,6 @@ Contributing
 License
 -------
 
-*Nubilo* is licensed under the terms of [MIT License](http://opensource.org/licenses/MIT). 
+*Nubilo* is licensed under the terms of [MIT License](LICENSE). 
  
  
