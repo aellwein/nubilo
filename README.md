@@ -9,6 +9,11 @@ What is it?
 
 *Nubilo* aims to be a private cloud which can host services (a.k.a. apps). 
 
+Current State
+-------------
+
+*In development, not ready for testing yet!*
+
 
 Example Installation on a Raspberry PI (running Raspbian):
 ----------------------------------------------------------
