@@ -13,15 +13,23 @@ Current State
 
 *In development, not ready for testing yet!*
 
+Prerequisites
+-------------
 
-Example Installation on a Raspberry PI (running Raspbian):
-----------------------------------------------------------
+* luajit
+* luarocks
+* turbo (installed with LuaRocks)
+* busted (used only for tests, installed with LuaRocks
+* luacov (used only for tests coverage, installed with LuaRocks)
 
-* ``sudo apt-get install luarocks luajit libssl-dev``
+Building
+--------
+
+* ``sudo luarocks install luajit``
 * ``sudo luarocks install turbo``
-* clone this repo and run:
-  * ``make``
-  * ``sudo make install``
+* ``sudo luarocks install busted``
+* ``make``
+
 
 Documentation
 -------------

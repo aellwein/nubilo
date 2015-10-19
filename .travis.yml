@@ -2,17 +2,18 @@ sudo: false
 language: erlang
 
 env:
-  - LUA="luajit"
+    - LUA="luajit"
 
 branches:
-  only:
-    - master
+    only:
+        - master
 
 addons:
     apt:
         packages:
             - luajit
             - luarocks
+
 install:
     - luarocks install --local busted
     - luarocks install --local luacov-coveralls
@@ -23,10 +24,10 @@ after_success:
     - /home/travis/.luarocks/bin/luacov-coveralls
 
 notifications:
-  webhooks:
-    - https://webhooks.gitter.im/e/02362d51814b387a7783
-  recipients:
-    - alex.ellwein@gmail.com
-  email:
-    on_success: change
-    on_failure: always
+    webhooks:
+        - https://webhooks.gitter.im/e/02362d51814b387a7783
+    recipients:
+        - alex.ellwein@gmail.com
+    email:
+        on_success: change
+        on_failure: always
