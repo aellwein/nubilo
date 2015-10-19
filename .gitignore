@@ -1,4 +1,5 @@
 .project
 .settings/
 .buildpath
-luacov.report.out
+luacov.*.out
+lcov.*.out
