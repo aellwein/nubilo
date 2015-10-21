@@ -107,7 +107,7 @@ describe("foundation module:",
 
         it("disallows lowercased class names *by convention*",
           function()
-            assert.has.errors(function() foundation:class("myClass") end, "name should have its first letter in upper case")
+            assert.has.errors(function() foundation:class("myClass") end, "name should have its first letter in upper case by convention")
           end)
 
         it("disallows base arg of non class type",

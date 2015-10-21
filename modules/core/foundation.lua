@@ -22,7 +22,11 @@ THE SOFTWARE.
 
 local foundation = {}
 
--- makes a table immutable
+-------------------------------------------------------------------------------
+-- Makes given table immutable, i.e. either no new members can be added
+-- to the table nor the existing ones can be changed.
+-- @param #table t to make immutable.
+-------------------------------------------------------------------------------
 foundation.immutable = function(self, t)
   assert(type(t) == 'table', "must be of type table")
   local proxy = {}
@@ -38,7 +42,9 @@ foundation.immutable = function(self, t)
   return proxy
 end
 
--- foundation.Object is the root of all objects
+-------------------------------------------------------------------------------
+-- foundation.Object is the root of the foundation's object hierarchy.
+-------------------------------------------------------------------------------
 foundation.Object = {}
 foundation.Object.name = "foundation.Object"
 foundation.Object.super = function() return nil end -- no parent here
@@ -47,23 +53,31 @@ foundation.Object._mixins = {}
 foundation.Object.__tostring = function() return "foundation.Object()" end
 foundation.Object = foundation:immutable(foundation.Object)
 
--- checks if argument is a foundation class
+-------------------------------------------------------------------------------
+-- checks if argument is a foundation class or its instance.
+-- @param #table t argument to check.
+-------------------------------------------------------------------------------
 foundation.isClass = function(self, t)
   if type(t) ~= "table" then return false end
   if not t.super or type(t.super) ~= "function" then return false end
+
   return true
 end
 
--- to check
-foundation.instanceof = function(self, t)
-  assert(self:isClass(t), "is not a foundation class")
-end
-
--- class() prepares a class blueprint
+-------------------------------------------------------------------------------
+-- This function prepares a foundation class blueprint. This means, functions
+-- and attributes can be added to the table, but it is not ready to be used
+-- as instance yet.
+-- @param #string name name of the foundation class, should by convention begin 
+-- with an uppercase letter.
+-- @param #class base an instance of foundation class which is to be the parent
+-- for this class.
+------------------------------------------------------------------------------- 
 foundation.class = function(self, name, base)
   assert(name,"name may not be nil")
   assert(string.len(name)>0, "name may not be empty")
-  assert(string.sub(name,1,1) == string.upper(string.sub(name,1,1)), "name should have its first letter in upper case")
+  assert(string.sub(name,1,1) == string.upper(string.sub(name,1,1)), 
+        "name should have its first letter in upper case by convention")
   local clazz = {}
   if base then
     assert(self:isClass(base), "base should be a foundation class")
@@ -73,10 +87,5 @@ foundation.class = function(self, name, base)
   end
   return clazz
 end
-
--- new() creates a class instance, i.e. calls a constructor
-foundation.new = function(self, ...)
-end
-
 
 return foundation
