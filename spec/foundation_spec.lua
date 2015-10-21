@@ -114,6 +114,11 @@ describe("foundation module:",
           function()
             assert.has.errors(function() foundation:class("MyClass", {}) end, "base should be a foundation class")
           end)
+          
+        it("allows providing a super class",
+          function()
+          	assert.True(foundation:class("MyClass", foundation.Object).super() == foundation.Object, "base class must be foundation.Object")
+          end)
       
       end)
 
