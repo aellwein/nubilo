@@ -54,7 +54,7 @@ describe("foundation module:",
           
         it("implements __tostring",
           function()
-            assert.equals("foundation.Object()", tostring(foundation.Object))
+            assert.equals("foundation.Object", tostring(foundation.Object))
           end)
           
       end)
@@ -110,6 +110,11 @@ describe("foundation module:",
             assert.has.errors(function() foundation:class("myClass") end, "name should have its first letter in upper case by convention")
           end)
 
+        it("class name can be queried",
+          function()
+            assert.True(foundation:class("MyClass").name == "MyClass")
+          end)
+
         it("disallows base arg of non class type",
           function()
             assert.has.errors(function() foundation:class("MyClass", {}) end, "base should be a foundation class")
@@ -119,7 +124,36 @@ describe("foundation module:",
           function()
           	assert.True(foundation:class("MyClass", foundation.Object).super() == foundation.Object, "base class must be foundation.Object")
           end)
-      
+
+        it("provides instanceOf() function",
+          function()
+            assert.True(type(foundation:class("MyClass").instanceOf) == "function", "must have instanceOf() function")
+          end)
+
+        it("instanceOf() works only with class argument",
+          function()
+            assert.has.errors(function() foundation:class("MyClass"):instanceOf({}) end, "argument must be a foundation class")
+          end)
+
+        it("instanceOf() of a not related class returns false",
+          function()
+            clzGrandpa = foundation:class("MyGrandpa")
+            clzUnrelated = foundation:class("Unrelated")
+            clzParent = foundation:class("MyParent", clzGrandpa)
+            clz = foundation:class("MyClass", clzParent)
+
+            assert.falsy(clz:instanceOf(clzUnrelated), "must not involve a non-related class")
+          end)
+
+        it("instanceOf() of a related class returns true",
+          function()
+            clzGrandpa = foundation:class("MyGrandpa")
+            clzParent = foundation:class("MyParent", clzGrandpa)
+            clz = foundation:class("MyClass", clzParent)
+            assert.True(clz:instanceOf(clzGrandpa), "must be instanceOf()")
+            assert.True(clz:instanceOf(clzParent), "must be instanceOf()")
+          end)
+
       end)
 
   end)

@@ -50,7 +50,7 @@ foundation.Object.name = "foundation.Object"
 foundation.Object.super = function() return nil end -- no parent here
 foundation.Object.Object = function() end --default constructor, noop
 foundation.Object._mixins = {}
-foundation.Object.__tostring = function() return "foundation.Object()" end
+foundation.Object.__tostring = function(self) return self.name end
 foundation.Object = foundation:immutable(foundation.Object)
 
 -------------------------------------------------------------------------------
@@ -79,12 +79,28 @@ foundation.class = function(self, name, base)
   assert(string.sub(name,1,1) == string.upper(string.sub(name,1,1)), 
         "name should have its first letter in upper case by convention")
   local clazz = {}
+  clazz.name = name
   if base then
     assert(self:isClass(base), "base should be a foundation class")
     clazz.super = function() return base end
   else
     clazz.super = function() return self.Object end
   end
+
+  clazz.instanceOf = function(self, cl)
+    assert(foundation:isClass(cl), "argument must be a foundation class")
+    parent = clazz
+    while true do
+      parent = parent.super()
+      if parent == cl then
+        return true
+      end
+      if parent == self.Object then
+        return false
+      end
+    end
+  end
+
   return clazz
 end
 
