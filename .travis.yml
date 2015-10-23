@@ -25,7 +25,7 @@ after_success:
 
 notifications:
     webhooks:
-        - https://webhooks.gitter.im/e/02362d51814b387a7783
+        - https://webhooks.gitter.im/e/e7f5a3b2ab6ec7c47ed7
     recipients:
         - alex.ellwein@gmail.com
     email:
